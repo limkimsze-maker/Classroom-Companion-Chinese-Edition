@@ -1,6 +1,6 @@
 'use strict';
-DIRECT['custom-text']='custom-text.html';
-DIRECT['whiteboard']='whiteboard.html';
+DIRECT['custom-text']='custom-text.html?edition=zh';
+DIRECT['whiteboard']='whiteboard.html?edition=zh';
 const EXTRA_TOOLS=[
  {slug:'custom-text',icon:'📝',title:'自定义文字／指示',mode:'half'},
  {slug:'whiteboard',icon:'✏️',title:'白板',mode:'full'}
