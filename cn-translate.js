@@ -79,6 +79,15 @@ const EXACT=new Map(Object.entries({
 
   'Short reset':'短暂休息','Move safely. Stop if anything feels uncomfortable.':'安全活动。如果身体不舒服，请立即停止。','▶ Start 30 sec':'▶ 开始 30 秒','↻ Another break':'↻ 换一个活动','Ready to learn again':'准备继续学习',
   '10 shoulder rolls':'转肩 10 次','Reach high, then touch your toes':'向上伸展，再碰脚尖','Stand and stretch for 20 seconds':'站起来伸展 20 秒','5 slow star jumps':'慢慢做 5 次开合跳','Shake out your hands and legs':'甩甩双手和双腿','March quietly on the spot':'安静地原地踏步','Take 5 slow breaths':'慢慢深呼吸 5 次','Stretch your arms wide, then relax':'张开双臂伸展，然后放松'
+,
+  "Saved classes:":"已保存的班级：",
+  "✏️ Rename Class Timetable":"✏️ 重命名班级课表",
+  "⬇ Export Selected Class":"⬇ 导出所选班级",
+  "⬆ Import Selected Class":"⬆ 导入单个班级",
+  "⬇ Export All":"⬇ 导出全部",
+  "⬆ Import All":"⬆ 导入全部",
+  "Add another class by pasting its timetable screenshot and saving under a new class name.":"粘贴另一班级的课表截图，并使用新班级名称保存，即可添加班级。",
+  "No timetables yet":"尚无已保存的课表"
 }));
 
 function compact(s){return String(s??'').replace(/\s+/g,' ').trim()}
