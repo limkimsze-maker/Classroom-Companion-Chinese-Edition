@@ -14,8 +14,34 @@
 const p=new URLSearchParams(location.search),tool=p.get('tool')||'timer-calm-music',display=p.get('display')||'';
 const frame=document.getElementById('sourceFrame');
 frame.src='/Classroom-Companion/support-tool.html?tool='+encodeURIComponent(tool)+(display?'&display='+encodeURIComponent(display):'')+'&v='+Date.now();
+function stabiliseChineseTimetable(){
+  if(tool!=='daily-visual-timetable')return;
+  try{
+    const w=frame.contentWindow,d=frame.contentDocument;
+    if(!w||!d)return;
+    if(!w.__ccChineseTimetableStorageGuard){
+      w.__ccChineseTimetableStorageGuard=true;
+      w.addEventListener('storage',e=>{
+        if(e.key==='classroomCompanionV1'||e.key==='classroomCompanionClassMasterV1')e.stopImmediatePropagation();
+      },true);
+    }
+    if(d.getElementById('pasteZone'))return;
+    if(!w.Support||w.Support.slug!=='daily-visual-timetable'||w.__ccChineseTimetableRepairing)return;
+    w.__ccChineseTimetableRepairing=true;
+    const s=d.createElement('script');
+    s.src='/Classroom-Companion/timetable-screenshot.js?v=20261010cnrepair1';
+    s.onload=()=>{w.__ccChineseTimetableRepairing=false};
+    s.onerror=()=>{w.__ccChineseTimetableRepairing=false};
+    d.body.appendChild(s);
+  }catch(e){}
+}
 frame.addEventListener('load',()=>{
   window.CCChinese?.attach(frame,{tool});
+  if(tool==='daily-visual-timetable'){
+    setTimeout(stabiliseChineseTimetable,250);
+    setTimeout(stabiliseChineseTimetable,900);
+    setTimeout(stabiliseChineseTimetable,1800);
+  }
   if(display==='fullscreen'){
     try{
       const d=frame.contentDocument,s=d.createElement('script');
