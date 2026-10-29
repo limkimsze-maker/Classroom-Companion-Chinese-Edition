@@ -1,1 +1,18 @@
-<!doctype html><html lang="zh-SG"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>白板 • 课堂小助手</title><script>location.replace('/Classroom-Companion/whiteboard.html?edition=zh')</script></head><body></body></html>
+<!doctype html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>白板 • 课堂小助手</title>
+<script>
+// Open Alpha directly: the legacy intermediate redirect discards edition=zh.
+const target=new URL('/Classroom-Companion/whiteboard-smart-beta.html',location.origin);
+target.search=location.search;
+target.searchParams.set('edition','zh');
+target.searchParams.set('v','20261029-cn-alpha-route2');
+target.hash=location.hash;
+location.replace(target.href);
+</script>
+</head>
+<body><p>正在打开华文白板……</p><a href="/Classroom-Companion/whiteboard-smart-beta.html?edition=zh&amp;v=20261029-cn-alpha-route2">打开华文白板</a></body>
+</html>
