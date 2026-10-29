@@ -9,10 +9,10 @@
 const target=new URL('/Classroom-Companion/whiteboard-smart-beta.html',location.origin);
 target.search=location.search;
 target.searchParams.set('edition','zh');
-target.searchParams.set('v','20261029-cn-alpha-route2');
+if(!target.searchParams.has('v'))target.searchParams.set('v','20261029-read1');
 target.hash=location.hash;
 location.replace(target.href);
 </script>
 </head>
-<body><p>正在打开华文白板……</p><a href="/Classroom-Companion/whiteboard-smart-beta.html?edition=zh&amp;v=20261029-cn-alpha-route2">打开华文白板</a></body>
+<body><p>正在打开华文白板……</p><a href="/Classroom-Companion/whiteboard-smart-beta.html?edition=zh&amp;v=20261029-read1">打开华文白板</a></body>
 </html>
