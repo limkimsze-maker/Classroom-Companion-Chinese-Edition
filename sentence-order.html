@@ -1,0 +1,184 @@
+<!doctype html><html lang="zh-SG"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>句子排序 • 课堂小助手 中文版</title><style>body{font-family:Arial,"Microsoft YaHei",sans-serif;background:#f4f7fc;color:#17243b;margin:0}header{background:#263e88;color:white;padding:18px 5%;font-size:24px;font-weight:bold}main{max-width:900px;margin:22px auto;padding:0 16px}.card{background:white;padding:22px;border-radius:18px;margin:16px 0;box-shadow:0 4px 20px #152f5414}textarea{width:100%;box-sizing:border-box;min-height:130px;font-size:20px;padding:12px;border:1px solid #bbc7dc;border-radius:10px}button{border:0;border-radius:10px;background:#315bea;color:white;padding:12px 17px;font-size:17px;cursor:pointer;margin:4px}button.secondary{background:#e9eefb;color:#263e88}button.mic{background:#e8f1ff;color:#17488f;white-space:nowrap;min-width:114px}button.mic.listening{background:#bf2846;color:white}button.mic:focus-visible{outline:3px solid #ffd66b;outline-offset:2px}.speech-status{flex-basis:100%;margin-left:63px;color:#52617d;font-size:14px;min-height:1em}.speech-status:empty{display:none}.tile{background:#fff0bc;color:#473709;border:2px solid #dfc76e;font-size:23px;padding:15px}.zone{min-height:90px;border:2px dashed #a6b7d4;border-radius:12px;padding:12px;margin:12px 0;display:flex;gap:8px;flex-wrap:wrap;align-content:flex-start}.bank{background:#f2f5ff}.hint{color:#52617d}.hidden{display:none}.line{display:flex;gap:5px;flex-wrap:wrap;margin:14px 0}.piece{border:1px solid #b7c6de;border-radius:9px;padding:9px;background:#f6f8fd;font-size:21px}.break{cursor:pointer;border:0;background:#ccd4e4;width:7px;border-radius:4px;padding:0;margin:0 3px}.break.on{background:#2d60df}#msg{font-weight:bold;font-size:20px}footer{text-align:center;padding:25px;color:#64708a}.sentence-row{display:flex;align-items:center;gap:8px;margin:9px 0}.sentence-row label{min-width:55px;font-weight:bold;color:#52617d}.sentence-row input{flex:1;min-width:0;padding:13px 12px;border:1px solid #bbc7dc;border-radius:10px;font-size:20px}.sentence-row{flex-wrap:wrap}.sentence-row button{padding:10px;font-size:15px;margin:0}.sentence-row button:disabled{opacity:.45;cursor:not-allowed}@media(max-width:520px){.sentence-row{flex-wrap:wrap}.sentence-row label{min-width:100%}.sentence-row input{flex-basis:60%;width:100%}.speech-status{margin-left:0}}.sentence-period{display:inline-flex;align-items:center;justify-content:center;font-size:37px;line-height:1;font-weight:800;color:#17243b;padding:2px 4px 10px 1px;user-select:none;flex-shrink:0}.zone#answer{align-items:center}.json-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.json-message{font-size:14px;color:#51658b}.json-message.error{color:#b4243c}#importInput{display:none}#answer.completed{display:block;min-height:0;border:0;background:transparent;box-shadow:none;padding:6px 2px;margin:12px 0 18px;font-size:clamp(24px,3.3vw,35px);font-weight:600;line-height:1.65;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;word-break:normal;color:#17243b}[hidden]{display:none!important}</style><header>🧩 句子排序 · 课堂小助手</header><main><section class="card" id="setup"><h2>教师设置</h2><p>输入正确的句子，也可以点击 🎤 用普通话说出句子。需要更多题目时，再点击“＋ 添加句子”。</p><p class="hint">首次使用麦克风时，请允许浏览器访问。语音识别取决于浏览器支持，部分浏览器需要联网。识别后请核对文字。</p><div id="sentenceRows"></div><p><button class="secondary" id="addSentence" type="button">＋ 添加句子</button></p><p><button id="prepare" type="button">自动分词与预览</button></p><p class="hint">也可用 / 手动指定分组，例如：我和妈妈 / 在公园里 / 快乐地散步。</p><div class="json-tools"><button class="secondary" type="button" id="exportJson">⬇ 导出 JSON</button><button class="secondary" type="button" id="importJson">⬆ 导入 JSON</button><input type="file" id="importInput" accept=".json,application/json" aria-label="选择 JSON 文件"></div><p class="json-message" id="jsonMessage" role="status" aria-live="polite">可保存所有句子和教师调整好的分组，下次导入继续使用。</p></section><section class="card hidden" id="preview"><h2>调整分组</h2><p class="hint">点击词语之间的竖线，切换合并或分开。每句均可独立调整。</p><div id="previews"></div><button id="generate">生成练习</button><button class="secondary" id="back">返回修改句子</button></section><section class="card hidden" id="play"><h2 id="progress"></h2><p>请把词语排成一个完整的句子。</p><h3>你的句子</h3><div class="zone" id="answer" aria-label="你的句子"></div><h3 id="bankTitle">词语库</h3><div class="zone bank" id="bank"></div><p id="msg"></p><button id="check">提交答案</button><button class="secondary" id="clear">清空</button><button class="secondary" id="speak">🔊 朗读</button><button class="secondary" id="next" hidden>下一题</button><button class="secondary" id="edit">教师设置</button></section></main><footer>课堂小助手 • 中文版 · Created by Lim Kim Sze</footer><script>
+const $=id=>document.getElementById(id);let questions=[],idx=0,selected=[],remaining=[],score=0;
+function strip(s){return String(s).trim().replace(/[。．.!！?？]+$/g,'').trim()}
+function completeSentence(q){return groups(q).join('')+'。'}
+function segment(s){if(s.includes('/'))return s.split('/').map(x=>x.trim()).filter(Boolean);try{return [...new Intl.Segmenter('zh-SG',{granularity:'word'}).segment(s)].map(x=>x.segment).filter(x=>x.trim()&&!/^[，。！？、；：,.!?;:]$/.test(x))}catch(e){return [...s].filter(x=>!/^[，。！？、；：,.!?;:]$/.test(x))}}
+
+const SpeechRecognitionClass=window.SpeechRecognition||window.webkitSpeechRecognition;
+let activeRecognition=null,activeMic=null,activeSpeechRow=null;
+function setSpeechStatus(row,message){if(row&&row.isConnected)row.querySelector('.speech-status').textContent=message}
+function endSpeechInput(abort=false){
+  if(!activeRecognition)return;
+  try{if(abort)activeRecognition.abort();else activeRecognition.stop()}catch(error){}
+}
+function clearActiveSpeech(recognizer,button){
+  if(activeRecognition!==recognizer)return;
+  activeRecognition=null;activeMic=null;activeSpeechRow=null;
+  button.classList.remove('listening');
+  button.textContent='🎤 语音输入';
+  button.setAttribute('aria-pressed','false');
+}
+function toggleSpeech(row,input,button){
+  if(activeRecognition){
+    if(activeMic===button){setSpeechStatus(row,'正在结束识别…');endSpeechInput();return}
+    endSpeechInput(true);
+    if(activeMic)activeMic.classList.remove('listening');
+    if(activeMic){activeMic.textContent='🎤 语音输入';activeMic.setAttribute('aria-pressed','false')}
+    activeRecognition=null;activeMic=null;activeSpeechRow=null;
+  }
+  if(!SpeechRecognitionClass){
+    setSpeechStatus(row,'此浏览器不支持语音输入。请使用支持语音识别的 Chrome 或 Edge，或直接键入。');
+    return;
+  }
+  let recognition;
+  try{
+    recognition=new SpeechRecognitionClass();
+    recognition.lang='zh-CN';
+    recognition.continuous=false;
+    recognition.interimResults=true;
+    recognition.maxAlternatives=1;
+  }catch(error){
+    setSpeechStatus(row,'无法启动语音识别。请改用键盘输入。');
+    return;
+  }
+  const initialText=input.value;
+  let finalText='',errorMessage='';
+  const joined=spoken=>initialText+(initialText&&spoken&&/[A-Za-z0-9]$/.test(initialText)&&/^[A-Za-z0-9]/.test(spoken)?' ':'')+spoken;
+  recognition.onstart=()=>{if(activeRecognition===recognition)setSpeechStatus(row,'🔴 正在聆听… 请说出完整句子。')};
+  recognition.onresult=event=>{
+    if(activeRecognition!==recognition||!row.isConnected)return;
+    let finalParts=[],interimParts=[];
+    for(let i=0;i<event.results.length;i++){
+      const item=event.results[i];const transcript=item[0]&&item[0].transcript||'';
+      (item.isFinal?finalParts:interimParts).push(transcript);
+    }
+    finalText=finalParts.join('').trim();
+    input.value=joined(finalText);
+    setSpeechStatus(row,interimParts.length?'听到：'+interimParts.join(''):'已识别：'+(finalText||'…'));
+  };
+  recognition.onerror=event=>{
+    const messages={
+      'not-allowed':'无法使用麦克风。请在浏览器设置中允许麦克风权限。',
+      'service-not-allowed':'语音识别服务不可用，请检查浏览器权限。',
+      'audio-capture':'未检测到可用的麦克风。',
+      'no-speech':'没有检测到语音，请再试一次。',
+      'network':'网络或语音识别服务出现问题，请稍后重试。',
+      'language-not-supported':'此浏览器无法识别普通话。'
+    };
+    errorMessage=messages[event.error]||'语音识别未成功，请再试一次。';
+    if(activeRecognition===recognition)setSpeechStatus(row,errorMessage);
+  };
+  recognition.onend=()=>{
+    if(activeRecognition!==recognition)return;
+    clearActiveSpeech(recognition,button);
+    if(!errorMessage)setSpeechStatus(row,finalText?'识别完成。请检查或编辑句子。':'没有识别到文字，请再试一次。');
+  };
+  activeRecognition=recognition;activeMic=button;activeSpeechRow=row;
+  button.classList.add('listening');button.textContent='■ 停止录音';button.setAttribute('aria-pressed','true');
+  setSpeechStatus(row,'正在申请麦克风权限…');
+  try{recognition.start()}catch(error){
+    clearActiveSpeech(recognition,button);
+    setSpeechStatus(row,'语音识别未能启动。请检查麦克风权限。');
+  }
+}
+
+function getSentenceLines(){return [...document.querySelectorAll('#sentenceRows .sentence-input')].map(x=>x.value.trim()).filter(Boolean)}
+function addSentence(value=''){const host=$('sentenceRows');const row=document.createElement('div');row.className='sentence-row';const label=document.createElement('label');const input=document.createElement('input');input.className='sentence-input';input.type='text';input.placeholder='请输入完整句子';input.value=value;input.id='sentence-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);label.htmlFor=input.id;const mic=document.createElement('button');mic.className='mic';mic.type='button';mic.textContent='🎤 语音输入';mic.setAttribute('aria-label','使用普通话输入第 '+(host.children.length+1)+' 句');mic.setAttribute('aria-pressed','false');mic.onclick=()=>toggleSpeech(row,input,mic);const remove=document.createElement('button');remove.className='secondary';remove.type='button';remove.textContent='删除';remove.setAttribute('aria-label','删除句子');remove.onclick=()=>{if(activeSpeechRow===row)endSpeechInput(true);if(host.children.length===1){input.value='';input.focus()}else{row.remove();refreshSentenceRows()}setSpeechStatus(row,'')};const speechStatus=document.createElement('span');speechStatus.className='speech-status';speechStatus.setAttribute('role','status');speechStatus.setAttribute('aria-live','polite');row.append(label,input,mic,remove,speechStatus);host.append(row);refreshSentenceRows();if(value==='')input.focus()}
+function refreshSentenceRows(){[...$('sentenceRows').children].forEach((row,i)=>{row.querySelector('label').textContent='第 '+(i+1)+' 句';row.querySelector('.mic').setAttribute('aria-label','使用普通话输入第 '+(i+1)+' 句')})}
+function createQuestion(line,savedGroups){
+  const raw=strip(line), tokens=segment(raw);
+  let cuts=tokens.map((_,i)=>i<tokens.length-1);
+  if(Array.isArray(savedGroups)&&savedGroups.length>0&&savedGroups.every(g=>typeof g==='string'&&g.length>0)&&savedGroups.join('')===tokens.join('')){
+    let length=0;
+    const boundaries=new Set(savedGroups.slice(0,-1).map(group=>(length+=group.length)));
+    length=0;
+    cuts=tokens.map((token,i)=>{length+=token.length;return i<tokens.length-1&&boundaries.has(length)});
+  }
+  return {source:line,raw,tokens,cuts};
+}
+function prepare(){
+  if(activeRecognition){setSpeechStatus(activeSpeechRow,'请先点击“停止录音”，再生成练习。');return}
+  const lines=getSentenceLines(),previous=questions;
+  questions=lines.map((line,i)=>previous[i]&&previous[i].source===line?previous[i]:createQuestion(line)).filter(q=>q.tokens.length>1);
+  if(!questions.length){alert('请输入至少一句可拆分的句子。');return}
+  renderPreview();
+  $('setup').classList.add('hidden');$('play').classList.add('hidden');$('preview').classList.remove('hidden')
+}
+function groups(q){let a=[],cur='';q.tokens.forEach((w,i)=>{cur+=w;if(q.cuts[i]||i===q.tokens.length-1){a.push(cur);cur=''}});return a}
+function renderPreview(){const root=$('previews');root.replaceChildren();questions.forEach((q,k)=>{let box=document.createElement('div');box.className='card';let h=document.createElement('h3');h.textContent=(k+1)+'. '+completeSentence(q);box.append(h);let line=document.createElement('div');line.className='line';q.tokens.forEach((word,i)=>{let w=document.createElement('span');w.className='piece';w.textContent=word;line.append(w);if(i<q.tokens.length-1){let b=document.createElement('button');b.className='break'+(q.cuts[i]?' on':'');b.title='点击合并或分开';b.setAttribute('aria-label','切换词语分组');b.onclick=()=>{q.cuts[i]=!q.cuts[i];renderPreview()};line.append(b)}});box.append(line);let p=document.createElement('p');p.className='hint';p.textContent='排序卡片：'+groups(q).join(' ｜ ');box.append(p);root.append(box)})}
+function shuffle(a){
+  const b=[...a];
+  if(b.length<2)return b;
+  const sameText=()=>b.every((x,i)=>x.text===a[i].text);
+  for(let attempt=0;attempt<20;attempt++){
+    for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}
+    if(!sameText())break;
+  }
+  if(sameText()){
+    const distinct=b.findIndex(x=>x.text!==b[0].text);
+    if(distinct>0)[b[0],b[distinct]]=[b[distinct],b[0]];
+  }
+  return b
+}
+function start(){questions=questions.filter(q=>groups(q).length>1);if(!questions.length){alert('每句至少需要两个排序卡片。');return}idx=0;score=0;$('preview').classList.add('hidden');$('play').classList.remove('hidden');render()}
+function render(){selected=[];remaining=shuffle(groups(questions[idx]).map((text,i)=>({text,id:i})));$('progress').textContent='第 '+(idx+1)+' / '+questions.length+' 题 · 得分 '+score;$('msg').textContent='';$('next').hidden=true;$('check').disabled=false;$('answer').classList.remove('completed');$('bank').hidden=false;$('bankTitle').hidden=false;$('clear').hidden=false;draw()}
+function draw(){for(const [id,data] of [['answer',selected],['bank',remaining]]){const box=$(id);box.replaceChildren();data.forEach((obj,i)=>{let b=document.createElement('button');b.className='tile';b.textContent=obj.text;b.onclick=()=>{data.splice(i,1);(id==='answer'?remaining:selected).push(obj);$('msg').textContent='';draw()};box.append(b)});if(id==='answer'&&selected.length){const period=document.createElement('span');period.className='sentence-period';period.textContent='。';period.setAttribute('aria-label','句号');box.append(period)}}}
+function showCompletedSentence(){
+  const answer=$('answer');
+  answer.classList.add('completed');
+  answer.textContent=completeSentence(questions[idx]);
+  $('bank').hidden=true;
+  $('bankTitle').hidden=true;
+  $('clear').hidden=true;
+}
+function check(){let target=groups(questions[idx]);if(selected.length!==target.length){$('msg').textContent='请先排好所有词语。';return}if(selected.every((v,i)=>v.id===i)){$('msg').textContent='✓ 答对了！';score++;$('check').disabled=true;$('next').hidden=false;showCompletedSentence();speak(completeSentence(questions[idx]))}else $('msg').textContent='再试一次！'}
+function speak(t){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=.85;let voices=speechSynthesis.getVoices(),v=voices.find(v=>/zh-(CN|SG)/i.test(v.lang)&&/female|xiaoxiao|google/i.test(v.name))||voices.find(v=>/^zh/i.test(v.lang));if(v)u.voice=v;speechSynthesis.speak(u)}
+
+function jsonStatus(message,error=false){$('jsonMessage').textContent=message;$('jsonMessage').classList.toggle('error',error)}
+function exportJSON(){
+  if(activeRecognition){jsonStatus('请先停止语音输入，再导出。',true);return}
+  const lines=getSentenceLines();
+  if(!lines.length){jsonStatus('请先输入至少一个句子。',true);return}
+  const entries=lines.map((line,i)=>{
+    const q=questions[i]&&questions[i].source===line?questions[i]:createQuestion(line);
+    return {text:line,groups:groups(q)};
+  });
+  const payload={app:'ChineseSentenceOrder',version:1,sentences:entries};
+  const json=JSON.stringify(payload,null,2);
+  const url=URL.createObjectURL(new Blob([json],{type:'application/json;charset=utf-8'}));
+  const link=document.createElement('a');
+  link.href=url;link.download='句子排序-练习.json';
+  document.body.append(link);link.click();link.remove();
+  window.setTimeout(()=>URL.revokeObjectURL(url),1000);
+  jsonStatus('已导出 '+entries.length+' 个句子及其分组。');
+}
+async function importJSON(file){
+  if(!file)return;
+  if(file.size>1024*1024){jsonStatus('JSON 文件过大（最多 1 MB）。',true);return}
+  try{
+    const data=JSON.parse(await file.text());
+    const entries=Array.isArray(data)?data:data&&data.sentences;
+    if(!Array.isArray(entries)||entries.length<1||entries.length>200)throw Error('需要 1 至 200 个句子。');
+    const imported=entries.map((entry,i)=>{
+      const text=typeof entry==='string'?entry:entry&&entry.text;
+      if(typeof text!=='string'||!text.trim()||text.length>500)throw Error('第 '+(i+1)+' 个句子无效。');
+      const savedGroups=typeof entry==='object'&&entry!==null?entry.groups:undefined;
+      if(savedGroups!==undefined&&(!Array.isArray(savedGroups)||!savedGroups.length||!savedGroups.every(g=>typeof g==='string'&&g.length>0)))throw Error('第 '+(i+1)+' 个句子的分组格式错误。');
+      const q=createQuestion(text.trim(),savedGroups);
+      if(savedGroups&&savedGroups.join('')!==q.tokens.join(''))throw Error('第 '+(i+1)+' 个句子的分组与原句不一致。');
+      if(q.tokens.length<2)throw Error('第 '+(i+1)+' 个句子无法拆分。');
+      return q;
+    });
+    if(activeRecognition)endSpeechInput(true);
+    activeRecognition=null;activeMic=null;activeSpeechRow=null;
+    questions=imported;
+    const host=$('sentenceRows');host.replaceChildren();
+    imported.forEach(q=>addSentence(q.source));
+    $('setup').classList.remove('hidden');$('preview').classList.add('hidden');$('play').classList.add('hidden');
+    jsonStatus('已导入 '+imported.length+' 个句子。请点击“自动分词与预览”检查分组。');
+  }catch(error){jsonStatus('导入失败：'+(error&&error.message||'文件格式错误'),true)}
+}
+
+$('exportJson').onclick=exportJSON;$('importJson').onclick=()=>$('importInput').click();$('importInput').onchange=async event=>{const file=event.target.files&&event.target.files[0];await importJSON(file);event.target.value=''};
+$('addSentence').onclick=()=>addSentence();addSentence();$('prepare').onclick=prepare;$('generate').onclick=start;$('back').onclick=()=>{$('preview').classList.add('hidden');$('setup').classList.remove('hidden')};$('check').onclick=check;$('clear').onclick=()=>{remaining.push(...selected);selected=[];$('msg').textContent='';draw()};$('speak').onclick=()=>speak(selected.map(x=>x.text).join('')+'。');$('next').onclick=()=>{idx++;if(idx>=questions.length){$('msg').textContent='完成！总得分：'+score+'/'+questions.length;$('next').hidden=true;$('check').disabled=true}else render()};$('edit').onclick=()=>{$('play').classList.add('hidden');$('setup').classList.remove('hidden')};
+</script></html>
