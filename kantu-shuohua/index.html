@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#116f65">
+<title>看图说话｜中文互动练习</title>
+<style>
+:root{--ink:#153849;--sub:#577681;--teal:#087b6c;--soft:#e8f8f0;--bg:#f3f8f9;--line:#d2e3e5;--bad:#af4335;--amber:#ffdf9e}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",system-ui,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #efb747;outline-offset:3px}
+[hidden],.hidden{display:none!important}
+header{background:linear-gradient(112deg,#123e4a,#10776d);color:white;padding:18px clamp(15px,4vw,46px);display:flex;justify-content:space-between;align-items:center;gap:15px}
+header .brand{font-size:clamp(23px,3vw,32px);font-weight:900}header .sub{font-size:12px;color:#d1eee7;margin-top:4px}
+header .chip{border:1px solid #7fc2b4;border-radius:30px;padding:7px 11px;white-space:nowrap;font-size:12px}
+main{max-width:1160px;margin:23px auto;padding:0 16px 27px}
+.steps{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 17px}.steps span{background:#fff;border:1px solid var(--line);border-radius:30px;font-size:13px;font-weight:850;color:var(--sub);padding:8px 12px}
+.steps span.active{background:var(--soft);color:#087469;border-color:#92d0c2}
+.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:clamp(16px,3vw,29px);margin-bottom:18px;box-shadow:0 8px 27px #18404b0e}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(26px,3vw,34px);margin-bottom:11px}h2{font-size:22px;margin-bottom:12px}h3{font-size:18px;margin-bottom:10px}
+.hint{font-size:14px;color:var(--sub);line-height:1.72}.small{font-size:13px}
+.btn{border:0;background:var(--teal);color:white;font-weight:850;padding:11px 16px;min-height:44px;border-radius:11px}
+.btn.secondary{background:#e9f1f3;color:#345c68}.btn.outline{background:white;color:var(--teal);border:1px solid #a8d5c8}
+.btn.danger{background:#fdf0ed;color:var(--bad)}.btn:disabled{cursor:default;opacity:.5}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:17px 0 0}
+.field{margin:16px 0}label{display:block;font-weight:850;font-size:14px;color:#355e67;margin-bottom:7px}
+input[type=text],select,textarea{width:100%;border:1.5px solid #bcd1d6;border-radius:11px;background:#fff;color:var(--ink);font-size:17px;line-height:1.6;padding:11px 12px;min-width:0}
+textarea{resize:vertical;min-height:88px}
+.examples{border:1px solid #b5dfd1;border-radius:16px;background:#f1faf5;padding:17px;margin:18px 0 20px}
+.examples-header{display:flex;align-items:center;justify-content:space-between;gap:11px;flex-wrap:wrap}.examples-header strong{font-size:18px;color:#0e665d}
+.examples summary{cursor:pointer;color:#107065;font-weight:800;padding:9px 0;margin-top:5px}
+.examples-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
+.example-item{display:flex;flex-direction:column;gap:7px;border:1px solid #d1e8de;border-radius:12px;background:white;padding:10px;min-width:0}
+.example-thumb{aspect-ratio:16/9;border-radius:9px;overflow:hidden;border:1px solid #deebed;background:#edf7f5}
+.example-thumb svg{width:100%;height:100%;display:block}
+.example-info{flex:1}.example-info strong{font-size:16px;display:block;line-height:1.6}.example-info span{font-size:12px;line-height:1.5;color:var(--sub);display:block}
+.example-item .btn{font-size:13px;min-height:39px;padding:8px 11px}
+.editor{border:1px solid var(--line);background:#fcfefe;border-radius:16px;margin:15px 0;padding:16px}
+.editor>summary{cursor:pointer;font-size:17px;color:#14685f;font-weight:900;line-height:1.6;padding:4px 0}
+.editor-body{padding-top:12px}.editor-top{text-align:right;margin-bottom:7px}.editor-top .btn{min-height:38px;padding:8px 11px;font-size:13px}
+.editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.wide{grid-column:1/-1}
+.scene-select{display:flex;align-items:stretch;gap:8px}.scene-select select{flex:1}
+.art-holder{border-radius:13px;overflow:hidden;border:1px solid #d1e0e5;background:#edf5f5}
+.art-holder svg,.art-holder img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain}
+.upload-box{border:1px dashed #aacac4;border-radius:10px;padding:10px;margin-top:9px;font-size:13px;color:var(--sub);background:#f8fcfa}
+.upload-box label{font-size:13px}.upload-box input{font-size:13px;width:100%}
+.upload-status{font-size:13px;color:#4e7882;line-height:1.6;margin-top:7px;min-height:18px}
+.entry-questions{min-height:145px}.entry-model{min-height:135px}.entry-keywords{min-height:75px}
+.mic-row{display:flex;gap:7px;align-items:stretch}.mic-row textarea{flex:1}.mic{font-size:14px;min-width:46px;padding:8px 10px}
+.mic.listening{background:#be3b52;color:#fff}
+.voice-status{font-size:13px;line-height:1.6;color:var(--sub);margin:7px 0 0;min-height:20px}
+.note{font-size:14px;color:#486c78;background:#f1f9f5;padding:13px 16px;line-height:1.75;border-left:4px solid #6ab89e;border-radius:0 11px 11px 0;margin:16px 0}
+.status{font-size:13px;line-height:1.65;margin:12px 0 0;color:var(--sub)}.status.bad{color:var(--bad)}
+.preview-card{border:1px solid var(--line);border-radius:16px;background:#fcfefe;padding:17px;margin:16px 0}
+.preview-number{font-size:14px;color:#0b7b6a;font-weight:850;margin:0 0 9px}
+.preview-art{max-width:780px;margin:8px auto 14px}.preview-card h3{margin:8px 0}
+.preview-prompts{font-size:16px;line-height:1.75;color:#325e69;margin:12px 0}
+.preview-model{border-left:4px solid #62bca4;background:#effaf3;border-radius:0 10px 10px 0;padding:11px 14px;font-size:16px;line-height:1.85}
+.progress-line{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.progress{font-size:15px;font-weight:900;color:#0a7b68}.progress-count{font-size:14px;color:var(--sub)}
+.picture-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:17px;align-items:start;margin:17px 0}
+.picture-stage{background:#f4faf8;border:1px solid #c9e5db;border-radius:17px;padding:14px;min-width:0}
+.picture-stage .art-holder{width:100%}
+.picture-title{font-size:clamp(21px,2.6vw,29px);font-weight:900;margin:9px 0 11px}
+.picture-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.picture-tools .btn{font-size:13px;padding:9px 11px;min-height:39px}
+.prompts-panel{background:#f4f8fb;border:1px solid #d4e4e8;border-radius:17px;padding:16px}
+.prompt-list{display:grid;gap:9px;margin:10px 0}.prompt{background:white;border:1px solid #d9e6ea;padding:11px 12px;border-radius:11px;font-size:16px;line-height:1.65;font-weight:750}
+.prompt-number{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:8px;background:#e6f4ef;color:#08705c;font-size:13px;font-weight:900;margin-right:8px}
+.keywords{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.keyword{background:#e8f5ed;border:1px solid #b5dbc8;color:#156d5b;border-radius:9px;padding:7px 10px;font-size:15px;font-weight:750}
+.response-area{background:#fcfefe;border:1px solid var(--line);border-radius:17px;padding:17px;margin:16px 0}
+.response-area h3{font-size:20px}
+.response-area textarea{min-height:135px;font-size:17px}
+.response-help{font-size:13px;color:var(--sub);line-height:1.65;margin:8px 0}
+.response-tools{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:13px 0 5px}
+.response-tools .btn{min-height:42px}
+.speech-live{font-size:13px;color:#436d77;min-height:20px;margin-top:9px;line-height:1.6}
+.done-checkbox{display:flex;align-items:center;gap:9px;font-size:14px;color:#3f626b;line-height:1.55;font-weight:700;margin:10px 0}
+.done-checkbox input{width:20px;height:20px;accent-color:var(--teal);flex:0 0 20px}
+.feedback{min-height:25px;color:var(--bad);font-size:15px;font-weight:800;line-height:1.6;margin:10px 0}
+.feedback.good{color:#0e7b64}
+.review{border:1px solid #c0ddcf;background:#f3faf5;border-radius:17px;padding:17px;margin:18px 0 0}
+.review h3{font-size:19px}.review .self-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.check-option{display:flex;align-items:center;gap:9px;background:white;padding:11px;border:1px solid #d6e7dc;border-radius:11px;font-weight:750;line-height:1.55}
+.check-option input{height:20px;width:20px;accent-color:#0f8f72;flex:0 0 20px}
+.check-status{color:#436e73;font-size:14px;margin:12px 0}
+.model-box{background:white;border-radius:12px;border:1px solid #cce0d6;padding:14px;font-size:17px;line-height:1.9;overflow-wrap:anywhere}
+.result-big{color:#087a67;text-align:center;font-size:clamp(28px,4vw,42px);font-weight:900;margin:25px 0}
+.result-copy{font-size:19px;line-height:1.8;text-align:center;color:#436b75}
+.fullscreen-art:fullscreen{background:#f3faf7;padding:2vw;display:grid;place-items:center}
+.fullscreen-art:fullscreen svg,.fullscreen-art:fullscreen img{max-width:96vw;max-height:95vh;height:auto;object-fit:contain}
+footer{text-align:center;font-size:12px;color:#728994;padding:14px 16px 28px}
+@media(max-width:850px){.picture-layout{grid-template-columns:1fr}.preview-art{max-width:100%}}
+@media(max-width:620px){header .chip{display:none}.panel{padding:16px}.steps span{padding:7px 9px;font-size:11px}.editor-grid{grid-template-columns:1fr}.wide{grid-column:1}.examples{padding:12px}.examples-grid{grid-template-columns:1fr}.review .self-checks{grid-template-columns:1fr}.picture-stage,.prompts-panel,.response-area{padding:12px}.prompt{font-size:15px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">🖼️ 看图说话</div><div class="sub">中文互动练习 · 观察、表达与口语交流</div></div><div class="chip">独立中文互动工具</div></header>
+<main>
+<nav class="steps" aria-label="活动步骤"><span class="active" id="step1">1 · 教师设置</span><span id="step2">2 · 检查图片</span><span id="step3">3 · 学生练习</span></nav>
+<section id="setup" class="panel">
+<h1>教师设置</h1>
+<p class="hint">选一幅图，设置观察问题和参考表达，再让学生<strong>看图说话</strong>。自带五幅原创场景插图；也可以上传自己的图片。学生可用普通话语音识别辅助整理表达，或直接口述后自评。</p>
+<div class="examples">
+ <div class="examples-header"><strong>📚 五幅可直接使用的看图说话示例</strong><button class="btn outline" id="loadAllExamples" type="button">载入全部 5 幅图</button></div>
+ <p class="hint small" style="margin:9px 0">载入后仍停留在教师设置。可编辑题目、观察问题、提示词和参考表达。</p>
+ <details><summary>查看五幅插图，并逐幅添加</summary><div id="exampleList" class="examples-grid"></div></details>
+</div>
+<div class="field"><label for="activityTitle">活动名称（可选）</label><input type="text" id="activityTitle" maxlength="90" value="看图说话" placeholder="例如：看图说话 · 关爱他人"></div>
+<div id="editors"></div>
+<div class="toolbar"><button id="addPicture" class="btn secondary" type="button">＋ 添加一幅图</button></div>
+<div class="note"><strong>教学建议：</strong>让学生先观察人物、地点和事情经过，再组织语言表达感受。<strong>这里的完整口语回答不由系统自动判对错</strong>：观察方式、词语与句子可以有多种合理表达。教师提供的范例只供比较学习。<br><strong>隐私提醒：</strong>上传学生或其他人物照片时，请遵守学校的同意与个人资料处理要求。自定义图片会一并保存在导出的 JSON 中。本页不会自行上传图片或录音到网站服务器；浏览器语音识别服务可能联网。</div>
+<div class="toolbar">
+ <button id="prepare" class="btn" type="button">下一步：检查图片与问题 →</button>
+ <button id="exportJson" class="btn outline" type="button">⬇ 导出 JSON</button>
+ <button id="importJson" class="btn outline" type="button">⬆ 导入 JSON</button>
+ <input id="importFile" type="file" accept=".json,application/json" hidden>
+</div>
+<p id="setupStatus" class="status" role="status" aria-live="polite">JSON 保存所有场景、引导问题、提示词及参考表达；不包含学生口述文字。</p>
+</section>
+<section id="preview" class="panel hidden">
+<h1>检查学生将看到的图片</h1>
+<p class="hint">核对插图、观察问题与参考表达是否一致。学生在完成口语表达后，才可展开老师的参考范例。</p>
+<div id="previewItems"></div>
+<div class="toolbar"><button class="btn" id="generate" type="button">生成学生练习 →</button><button class="btn secondary" id="backSetup" type="button">← 返回教师设置</button><button class="btn outline" id="exportPreview" type="button">⬇ 导出 JSON</button></div>
+</section>
+<section id="play" class="panel hidden">
+<div class="progress-line"><span class="progress" id="progress"></span><span class="progress-count" id="completedCount"></span></div>
+<h2 class="picture-title" id="pictureTitle"></h2>
+<div class="picture-layout">
+ <div class="picture-stage">
+  <div id="studentArt" class="art-holder fullscreen-art" aria-label="看图说话插图"></div>
+  <div class="picture-tools"><button id="fullScreenPicture" class="btn secondary" type="button">⛶ 放大图片</button><button id="showKeywords" class="btn outline" type="button">💡 显示提示词</button></div>
+  <div id="studentKeywords" class="keywords hidden"></div>
+ </div>
+ <div class="prompts-panel">
+  <h3>🔎 看一看，说一说</h3>
+  <p class="hint">按顺序观察画面，回答下面的问题，再把想法连成一段话。</p>
+  <div id="questionPrompts" class="prompt-list"></div>
+ </div>
+</div>
+<div class="response-area">
+ <h3>🎙️ 我的口头表达</h3>
+ <p class="hint">点击麦克风开始说普通话，再次点击停止。识别到的文字会出现在下方；也可以直接打字。如果只想面对面口述，无须开启麦克风。</p>
+ <label for="oralTranscript">我的表达（可语音输入，也可键入）</label>
+ <textarea id="oralTranscript" maxlength="4000" placeholder="我看到……事情发生在……然后……最后……我觉得……"></textarea>
+ <div class="response-tools"><button id="toggleMic" class="btn" type="button">🎤 开始说话</button><button id="clearTranscript" class="btn secondary" type="button">清空文字</button></div>
+ <p id="micInfo" class="speech-live" aria-live="polite" role="status"></p>
+ <label class="done-checkbox"><input id="spokeOffline" type="checkbox"> 我已直接口述（无需语音识别）</label>
+ <div class="toolbar"><button id="finishSpeaking" class="btn" type="button">✓ 我说好了，开始自评</button><button id="backTeacher" class="btn secondary" type="button">教师设置</button></div>
+ <p id="studentStatus" class="feedback" aria-live="polite" role="status"></p>
+</div>
+<div id="reviewPanel" class="review hidden">
+ <h3>🌱 我的口语自评</h3>
+ <p class="hint">你可以检查以下四点。没有单一正确说法，也不会自动给分。</p>
+ <div id="selfChecks" class="self-checks"></div>
+ <p id="checkStatus" class="check-status"></p>
+ <div class="toolbar"><button class="btn outline" id="revealModel" type="button">📖 查看老师的参考表达</button><button class="btn secondary" id="tryAgain" type="button">🔄 再练一次</button><button class="btn" id="nextPicture" type="button">下一幅图 →</button></div>
+ <div id="modelArea" class="hidden">
+  <h3 style="margin:15px 0 8px">老师的参考表达（并非唯一答案）</h3>
+  <div id="modelText" class="model-box"></div>
+  <div class="toolbar"><button id="readModel" class="btn outline" type="button">🔊 朗读参考表达</button></div>
+ </div>
+</div>
+</section>
+<section id="results" class="panel hidden">
+<div class="result-big">🎉 看图说话练习完成！</div>
+<p class="result-copy" id="resultsText"></p>
+<div class="toolbar" style="justify-content:center"><button id="repeatAll" class="btn" type="button">全部再练一次</button><button id="resultsTeacher" class="btn secondary" type="button">返回教师设置</button></div>
+</section>
+</main>
+<footer>看图说话 · 中文互动练习 · Created by Lim Kim Sze · 五幅内置原创插图 · 不保存录音；浏览器语音识别可能需要联网</footer>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const SpeechRecognitionClass=window.SpeechRecognition||window.webkitSpeechRecognition;
+const SCENES=[
+ {key:'school',name:'校园里互相帮助'},
+ {key:'rain',name:'雨天一起撑伞'},
+ {key:'park',name:'公园环保行动'},
+ {key:'library',name:'图书馆文明阅读'},
+ {key:'sports',name:'操场关心同学'}
+];
+const CHECKS=[
+ '我说清楚了人物和地点',
+ '我讲明白了发生什么事',
+ '我描述了人物的动作或经过',
+ '我表达了自己的感受或建议'
+];
+const EXAMPLES=[
+ {title:'校园里互相帮助',scene:'school',image:'',
+  questions:['画面里有谁？他们在哪里？','发生了什么事情？','另一位同学怎样帮助他？','你觉得主动帮助别人有什么好处？'],
+  keywords:['走廊','书本掉落','主动帮忙','道谢'],
+  model:'课间，两位同学在学校走廊里。一名同学不小心把几本书掉在了地上。另一名同学看见后，马上弯下腰帮他捡书。书本捡起来后，两人相视而笑。得到帮助的同学向朋友道谢。我觉得主动帮助别人是值得学习的好行为。'},
+ {title:'雨天一起撑伞',scene:'rain',image:'',
+  questions:['天气怎么样？画面里有谁？','有一位同学遇到了什么困难？','朋友怎样帮助他？','如果是你，你会怎样做？'],
+  keywords:['下雨','没有带伞','分享雨伞','互相关心'],
+  model:'放学时，天空下起了大雨。一名同学因为没有带雨伞，只好站在校门口等候。另一名同学看到后，主动走过来，邀请他一起撑伞回家。两人靠在一起，小心地走在湿湿的人行道上。我觉得朋友之间应该互相关心，在别人有困难时伸出援手。'},
+ {title:'公园环保行动',scene:'park',image:'',
+  questions:['小朋友在哪里？周围环境怎么样？','他们发现地上有什么？','他们怎样安全地清理垃圾？','我们平时应该怎样爱护环境？'],
+  keywords:['公园','垃圾','夹子','垃圾桶','保护环境'],
+  model:'周末，两名小朋友在公园里散步时，看见草地旁有一些垃圾。他们在大人的陪同下，戴好手套，使用夹子把垃圾夹起来，再放进垃圾桶。经过清理，草地变得干净整洁。我认为每个人都应该把垃圾丢进垃圾桶，共同保护我们的环境。'},
+ {title:'图书馆文明阅读',scene:'library',image:'',
+  questions:['这是什么地方？你看见了什么？','小朋友们正在做什么？','在图书馆里应该遵守哪些规则？','你喜欢怎样的阅读环境？为什么？'],
+  keywords:['图书馆','安静阅读','爱护书本','轻声交谈'],
+  model:'星期六上午，几名小朋友来到图书馆。他们在书架旁挑选喜欢的图书，有的坐下来安静地阅读，有的把看完的书放回原处。大家轻声说话，不打扰其他读者。我觉得图书馆是学习知识的好地方，我们应该爱护书本，保持安静。'},
+ {title:'操场关心同学',scene:'sports',image:'',
+  questions:['画面发生在什么地方？','有一位同学遇到了什么情况？','身边的同学和老师怎样做？','运动时我们应该注意什么？'],
+  keywords:['操场','跌倒','关心同学','告诉老师','注意安全'],
+  model:'体育课上，同学们在操场进行活动时，一名同学不小心跌倒了。附近的朋友马上停下脚步，向老师求助。老师走过来，查看这名同学的情况，并提醒大家不要推挤，注意安全。我认为遇到同学受伤时，应该主动关心并及时告诉老师。'}
+];
+let pictures=[],current=0,completed=[],showingKeywords=false,voice=null;
+function trim(s){return String(s||'').trim()}
+function lines(s){return String(s||'').replace(/\r\n?/g,'\n').split('\n').map(trim).filter(Boolean)}
+function clonePicture(p){return {title:p.title,scene:p.scene,image:p.scene==='custom'?p.image:'',questions:[...p.questions],keywords:[...p.keywords],model:p.model}}
+function person(x,y,size,shirt,pose){
+ const leg=pose==='sit'?
+  '<path d="M29 123 L51 141 L69 141 M49 123 L23 142 L12 144" stroke="#385a70" stroke-width="14" stroke-linecap="round" fill="none"/>':
+  '<path d="M29 120 L24 163 M51 120 L57 163" stroke="#385a70" stroke-width="15" stroke-linecap="round" fill="none"/>';
+ const arms=pose==='help'?
+  '<path d="M24 83 L4 108 L-8 125 M56 83 L77 106 L88 128" stroke="#f3b78b" stroke-width="12" stroke-linecap="round" fill="none"/>':
+ pose==='wave'?
+  '<path d="M24 85 L7 103 M56 84 L68 53 L62 18" stroke="#f3b78b" stroke-width="12" stroke-linecap="round" fill="none"/>':
+ pose==='reach'?
+  '<path d="M24 83 L10 117 M56 83 L89 117 L99 125" stroke="#f3b78b" stroke-width="12" stroke-linecap="round" fill="none"/>':
+ '<path d="M24 85 L9 118 M56 85 L73 118" stroke="#f3b78b" stroke-width="12" stroke-linecap="round" fill="none"/>';
+ return '<g transform="translate('+x+' '+y+') scale('+size+')">'+
+ '<ellipse cx="42" cy="172" rx="47" ry="10" fill="#204b5e" opacity=".12"/>'+
+ leg+
+ '<rect x="18" y="73" width="46" height="56" rx="19" fill="'+shirt+'"/>'+
+ arms+
+ '<circle cx="41" cy="42" r="31" fill="#f4bd91"/>'+
+ '<path d="M11 36 Q5 3 35 4 Q72 -2 72 32 Q52 10 31 20 Q23 33 11 36" fill="#3e3f4b"/>'+
+ '<circle cx="30" cy="44" r="3.5" fill="#293b4c"/><circle cx="53" cy="44" r="3.5" fill="#293b4c"/>'+
+ '<path d="M33 55 Q42 63 51 55" fill="none" stroke="#ae665a" stroke-width="2.8" stroke-linecap="round"/>'+
+ '<path d="M16 161 l-9 1 M59 163 l11 1" stroke="#243f54" stroke-width="9" stroke-linecap="round"/>'+
+ '</g>';
+}
+function cloud(x,y,s){
+ return '<g transform="translate('+x+' '+y+') scale('+s+')" fill="#fff" opacity=".94"><ellipse cx="25" cy="28" rx="29" ry="21"/><ellipse cx="55" cy="16" rx="34" ry="25"/><ellipse cx="88" cy="29" rx="30" ry="20"/><rect x="25" y="25" width="63" height="24" rx="12"/></g>';
+}
+function flower(x,y){
+ return '<g transform="translate('+x+' '+y+')"><path d="M0 0 V36" stroke="#489f73" stroke-width="4"/><circle cy="-5" r="7" fill="#f59cb3"/><circle cx="-8" r="7" fill="#ffbfc9"/><circle cx="8" r="7" fill="#f7a7bd"/><circle cy="-13" r="7" fill="#ed99ae"/><circle cy="-5" r="4" fill="#ffe078"/></g>';
+}
+function makeIllustration(scene){
+ const base='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="'+
+  (SCENES.find(s=>s.key===scene)?.name||'看图说话')+'"><rect width="800" height="450" fill="#e6f4f7"/>';
+ let art='';
+ if(scene==='school'){
+  art='<rect width="800" height="305" fill="#fbe9d7"/><rect y="300" width="800" height="150" fill="#d8e5dc"/>'+
+   '<path d="M0 305 H800" stroke="#d0b5a2" stroke-width="9"/>'+
+   '<rect x="42" y="56" width="175" height="225" rx="13" fill="#fff9ef" stroke="#dbbda6" stroke-width="6"/>'+
+   '<rect x="70" y="89" width="117" height="122" rx="7" fill="#b5e3e7"/>'+
+   '<path d="M129 90 V210 M69 150 H188" stroke="#faf8ee" stroke-width="8"/>'+
+   '<rect x="600" y="50" width="157" height="234" rx="13" fill="#ffd08f" stroke="#bd935d" stroke-width="6"/>'+
+   '<rect x="615" y="73" width="125" height="44" rx="9" fill="#f0a85a"/><rect x="615" y="129" width="125" height="44" rx="9" fill="#f0a85a"/><rect x="615" y="185" width="125" height="44" rx="9" fill="#f0a85a"/>'+
+   '<path d="M0 385 H800" stroke="#c1d2c9" stroke-width="3"/>'+
+   person(242,181,1.08,'#68a5d7','stand')+person(465,202,.98,'#e9908e','reach')+
+   '<g transform="translate(424 345) rotate(-14)"><rect width="62" height="22" rx="3" fill="#ffcf64" stroke="#a86b3d" stroke-width="2"/><path d="M8 4 H50 M8 10 H50" stroke="#c78b50" stroke-width="2"/></g>'+
+   '<g transform="translate(500 359) rotate(14)"><rect width="55" height="18" rx="3" fill="#6baccc" stroke="#43738f" stroke-width="2"/></g>'+
+   '<path d="M344 294 Q394 265 431 301" fill="none" stroke="#7aa5a6" stroke-width="3" stroke-dasharray="6 8"/>';
+ }else if(scene==='rain'){
+  art='<rect width="800" height="450" fill="#a7c8d3"/>'+
+   '<rect x="0" y="190" width="800" height="260" fill="#9fc0b8"/>'+
+   '<rect x="35" y="117" width="274" height="226" rx="8" fill="#e8e5d5"/>'+
+   '<rect x="63" y="143" width="217" height="145" fill="#afdfdf" stroke="#e8f8f7" stroke-width="11"/>'+
+   '<rect x="350" y="129" width="365" height="187" rx="8" fill="#d7dddf"/>'+
+   '<rect x="379" y="163" width="305" height="128" fill="#bed7dd"/>'+
+   '<rect x="0" y="331" width="800" height="119" fill="#8ea9b2"/>'+
+   '<path d="M0 390 H800" stroke="#d9e6df" stroke-width="7" stroke-dasharray="57 41"/>'+
+   cloud(100,23,1.25)+cloud(480,12,1.1)+
+   Array.from({length:35},(_,i)=>'<path d="M'+((i*73)%790+5)+' '+((i*51)%285+8)+' l-12 24" stroke="#4d92ac" stroke-width="3.6" opacity=".55"/>').join('')+
+   '<path d="M265 232 Q410 59 557 230 Q482 205 410 230 Q341 204 265 232Z" fill="#f7b85c" stroke="#9e6b4a" stroke-width="5"/>'+
+   '<path d="M410 226 V382 q0 29 25 25" fill="none" stroke="#6a6c74" stroke-width="7" stroke-linecap="round"/>'+
+   person(323,223,.89,'#cf686d','stand')+person(442,223,.91,'#5d97ca','wave')+
+   '<path d="M195 420 q25 -9 49 0 M620 418 q27 -8 53 0" stroke="#c7dfea" fill="none" stroke-width="4"/>';
+ }else if(scene==='park'){
+  art='<rect width="800" height="450" fill="#d5f0f5"/>'+cloud(84,44,.85)+cloud(570,30,.7)+
+   '<circle cx="650" cy="78" r="37" fill="#ffe59a"/>'+
+   '<path d="M0 260 Q210 192 389 259 Q590 206 800 261 V450 H0Z" fill="#9ccf97"/>'+
+   '<path d="M0 321 Q360 298 800 333 V450 H0Z" fill="#77bd8e"/>'+
+   '<path d="M260 450 Q345 339 405 310 Q465 320 548 450Z" fill="#f5dec0"/>'+
+   '<path d="M130 244 V134" stroke="#806d50" stroke-width="18" stroke-linecap="round"/>'+
+   '<circle cx="114" cy="122" r="63" fill="#6eaf79"/><circle cx="165" cy="116" r="55" fill="#65ac75"/><circle cx="98" cy="166" r="42" fill="#81bf86"/>'+
+   '<rect x="648" y="257" width="89" height="145" rx="10" fill="#4eaa83" stroke="#267856" stroke-width="5"/>'+
+   '<rect x="636" y="249" width="113" height="20" rx="8" fill="#2e8a64"/>'+
+   '<path d="M665 312 H720" stroke="#e3f7e4" stroke-width="7"/>'+
+   '<path d="M680 302 l17 34 l18 -34" fill="none" stroke="#e3f7e4" stroke-width="4"/>'+
+   person(268,202,.95,'#dfa666','help')+person(453,202,.95,'#6ba6d1','reach')+
+   '<path d="M369 333 L380 384" stroke="#8d795f" stroke-width="5"/>'+
+   '<path d="M370 330 l28 15 l-16 12 Z" fill="#f6cc69" stroke="#8d795f" stroke-width="3"/>'+
+   '<rect x="561" y="374" width="32" height="16" rx="3" fill="#ec8076" transform="rotate(-12 561 374)"/>'+
+   '<rect x="393" y="397" width="25" height="11" rx="3" fill="#f3d76d"/>'+
+   flower(66,325)+flower(752,331);
+ }else if(scene==='library'){
+  art='<rect width="800" height="450" fill="#f9eedc"/>'+
+   '<rect y="350" width="800" height="100" fill="#e8d5be"/>'+
+   '<rect x="34" y="33" width="188" height="310" rx="11" fill="#aa805c"/>'+
+   '<rect x="52" y="57" width="152" height="260" rx="6" fill="#f5d5a7"/>'+
+   '<path d="M50 132 H207 M50 218 H207 M50 310 H207" stroke="#aa805c" stroke-width="12"/>'+
+   Array.from({length:25},(_,i)=>{
+    const x=62+(i%8)*17,y=67+Math.floor(i/8)*83;
+    const colors=['#6298bd','#dc8b76','#92bd89','#ecba73','#a49acc'];
+    return '<rect x="'+x+'" y="'+y+'" width="13" height="'+(46+i%3*5)+'" rx="2" fill="'+colors[i%5]+'"/>';
+   }).join('')+
+   '<rect x="586" y="32" width="180" height="310" rx="11" fill="#aa805c"/>'+
+   '<rect x="600" y="50" width="153" height="263" fill="#f2d4a5"/>'+
+   '<path d="M598 131 H753 M598 219 H753 M598 311 H753" stroke="#aa805c" stroke-width="12"/>'+
+   Array.from({length:24},(_,i)=>{
+    const x=609+(i%8)*17,y=63+Math.floor(i/8)*90;
+    const colors=['#7cba96','#9d9fc8','#dc8e7c','#79a2c5'];
+    return '<rect x="'+x+'" y="'+y+'" width="13" height="'+(48+i%3*5)+'" rx="2" fill="'+colors[i%4]+'"/>';
+   }).join('')+
+   '<rect x="315" y="38" width="182" height="46" rx="12" fill="#f9fbf5" stroke="#bfdad3" stroke-width="4"/>'+
+   '<text x="406" y="68" font-size="24" fill="#367565" text-anchor="middle" font-weight="700">图书馆</text>'+
+   person(258,194,.91,'#7ea6d5','sit')+person(426,190,.96,'#d8909c','stand')+
+   '<rect x="293" y="317" width="164" height="22" rx="7" fill="#be926c"/><path d="M311 334 V418 M439 334 V418" stroke="#926e53" stroke-width="13"/>'+
+   '<path d="M340 315 q25 -17 50 -2 q25 -17 52 3 v25 q-24 -15 -52 -1 q-26 -15 -50 1Z" fill="#fdfae9" stroke="#8a998a" stroke-width="2"/>'+
+   '<path d="M390 316 V340" stroke="#8a998a" stroke-width="2"/>';
+ }else if(scene==='sports'){
+  art='<rect width="800" height="450" fill="#d7eff3"/>'+cloud(35,34,.9)+cloud(500,45,.85)+
+   '<rect x="0" y="200" width="800" height="250" fill="#8cc49a"/>'+
+   '<rect x="0" y="245" width="800" height="205" fill="#d99a77"/>'+
+   '<path d="M0 299 H800 M0 359 H800 M0 423 H800" stroke="#fff3da" stroke-width="5" opacity=".86"/>'+
+   '<rect x="83" y="116" width="266" height="126" rx="12" fill="#dfe7e3"/>'+
+   '<rect x="111" y="138" width="213" height="78" fill="#bfd8dd"/>'+
+   '<path d="M109 138 H326" stroke="#f5f7f3" stroke-width="11"/>'+
+   person(244,225,.92,'#df916d','sit')+person(384,205,.94,'#72a3d3','wave')+
+   '<g transform="translate(566 169) scale(1.1)">'+
+   '<path d="M27 123 L24 166 M54 125 L60 166" stroke="#4c6770" stroke-width="15" stroke-linecap="round"/>'+
+   '<rect x="18" y="76" width="49" height="56" rx="16" fill="#75b18f"/>'+
+   '<path d="M23 90 L5 118 M59 91 L84 117" stroke="#f0b88e" stroke-width="13" stroke-linecap="round"/>'+
+   '<circle cx="41" cy="43" r="31" fill="#f0b88e"/>'+
+   '<path d="M12 31 Q12 5 40 7 Q75 4 72 30" fill="#51515c"/>'+
+   '<circle cx="31" cy="44" r="3" fill="#2f4148"/><circle cx="53" cy="44" r="3" fill="#2f4148"/>'+
+   '<path d="M33 55 Q41 60 49 55" fill="none" stroke="#aa6d63" stroke-width="3"/>'+
+   '</g>'+
+   '<rect x="659" y="344" width="58" height="51" rx="8" fill="#f9eee3" stroke="#ae8780" stroke-width="4"/>'+
+   '<path d="M687 355 V384 M675 369 H700" stroke="#ca605c" stroke-width="8"/>'+
+   '<circle cx="110" cy="382" r="28" fill="#fff0d9" stroke="#bf8f68" stroke-width="4"/>'+
+   '<path d="M89 377 Q113 363 131 378 M94 396 Q112 383 126 401" fill="none" stroke="#bf8f68" stroke-width="3"/>';
+ }else return makeIllustration('school');
+ return base+art+'</svg>';
+}
+function renderArt(target,q){
+ target.replaceChildren();
+ if(q.scene==='custom'&&q.image){
+  const img=document.createElement('img');img.src=q.image;img.alt=q.title||'自定义看图说话图片';
+  target.append(img);
+ }else{
+  const holder=document.createElement('div');holder.innerHTML=makeIllustration(q.scene);
+  const svg=holder.firstElementChild;
+  if(svg)target.append(svg);
+ }
+}
+function validatePicture(p,index){
+ const name='第 '+(index+1)+' 幅图';
+ if(!p||typeof p.title!=='string'||!trim(p.title)||p.title.length>90)return name+'的标题格式错误。';
+ if(typeof p.scene!=='string'||!['school','rain','park','library','sports','custom'].includes(p.scene))return name+'的图片来源不正确。';
+ if(typeof p.image!=='string')return name+'的图片资料格式错误。';
+ if(p.scene==='custom'){
+  if(!/^data:image\/jpeg;base64,[a-z0-9+/]+={0,2}$/i.test(p.image)||p.image.length>1700000)
+   return name+'缺少有效的自定义图片，或图片过大。';
+ }
+ if(!Array.isArray(p.questions)||p.questions.length<3||p.questions.length>6||p.questions.some(x=>typeof x!=='string'||!trim(x)||x.length>150))
+  return name+'必须有 3 至 6 道有效观察问题。';
+ if(!Array.isArray(p.keywords)||p.keywords.length>10||p.keywords.some(x=>typeof x!=='string'||!trim(x)||x.length>30))
+  return name+'的提示词格式不正确（最多 10 个，每个最多 30 字）。';
+ if(typeof p.model!=='string'||p.model.length<25||p.model.length>1500)
+  return name+'的参考表达应有 25 至 1500 字。';
+ return '';
+}
+function setSection(section){
+ stopMic(true);
+ for(const name of ['setup','preview','play','results'])$(name).classList.toggle('hidden',name!==section);
+ const step=section==='setup'?1:section==='preview'?2:3;
+ for(let i=1;i<=3;i++)$('step'+i).classList.toggle('active',i===step);
+ if(window.speechSynthesis)window.speechSynthesis.cancel();
+ try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}
+}
+function message(text,bad=false){$('setupStatus').textContent=text;$('setupStatus').classList.toggle('bad',bad)}
+function stopMic(abort=false){
+ if(!voice)return;
+ const old=voice;voice=null;
+ try{abort?old.rec.abort():old.rec.stop()}catch(e){}
+ const b=$('toggleMic');b.textContent='🎤 开始说话';b.classList.remove('listening');b.setAttribute('aria-pressed','false');
+ $('micInfo').textContent=abort?'':'已停止语音输入。';
+}
+function microphone(){
+ if(voice){stopMic();return}
+ if(!SpeechRecognitionClass){$('micInfo').textContent='当前浏览器不支持语音识别。你可以直接打字，或口头说完后勾选下面的选项。';return}
+ let rec;
+ try{rec=new SpeechRecognitionClass();rec.lang='zh-CN';rec.interimResults=true;rec.continuous=true}
+ catch(e){$('micInfo').textContent='无法启动语音识别，请改用键盘或直接口述。';return}
+ const beginning=trim($('oralTranscript').value);
+ let hasError=false,finalText='';
+ rec.onstart=()=>{if(voice?.rec===rec)$('micInfo').textContent='🔴 正在聆听，请说普通话。'};
+ rec.onresult=e=>{
+  if(voice?.rec!==rec||$('play').classList.contains('hidden'))return;
+  const done=[],interim=[];
+  for(let i=0;i<e.results.length;i++){
+   const result=e.results[i],t=result[0]?.transcript||'';
+   (result.isFinal?done:interim).push(t);
+  }
+  finalText=done.join('').trim();
+  $('oralTranscript').value=[beginning,finalText].filter(Boolean).join('\n');
+  $('micInfo').textContent=interim.length?'正在识别：'+interim.join(''):'已识别：'+(finalText||'正在聆听…');
+ };
+ rec.onerror=e=>{
+  if(voice?.rec!==rec)return;hasError=true;
+  const map={'not-allowed':'麦克风权限被拒绝，请检查设置。','audio-capture':'未检测到麦克风。','network':'语音识别服务暂时无法连接。','no-speech':'没有检测到声音，请再试一次。'};
+  const msg=map[e.error]||'语音识别失败，请再试一次。';
+  stopMic(true);$('micInfo').textContent=msg;
+ };
+ rec.onend=()=>{if(voice?.rec!==rec)return;stopMic();if(!hasError)$('micInfo').textContent=finalText?'语音输入已结束，请检查识别的文字。':'没有识别到内容，可以再试一次。'};
+ voice={rec};$('toggleMic').textContent='■ 停止说话';$('toggleMic').classList.add('listening');$('toggleMic').setAttribute('aria-pressed','true');
+ $('micInfo').textContent='正在申请麦克风权限…';
+ try{rec.start()}catch(e){stopMic(true);$('micInfo').textContent='麦克风无法启动，请检查权限或直接口述。'}
+}
+function makeField(row,key,labelText,value,{multiline=false,help=''}={}){
+ const field=document.createElement('div');field.className='edit-field'+(multiline?' wide':'');
+ const label=document.createElement('label');label.textContent=labelText;
+ const el=document.createElement(multiline?'textarea':'input');
+ if(!multiline)el.type='text';
+ el.className='edit-'+key;el.value=value||'';
+ el.id='field-'+key+'-'+Math.random().toString(36).slice(2,9);
+ el.maxLength=key==='model'?1500:key==='questions'?1000:key==='keywords'?330:90;
+ el.placeholder=help;
+ label.htmlFor=el.id;
+ field.append(label,el);
+ return field;
+}
+function addEditor(p={title:'',scene:'school',image:'',questions:[],keywords:[],model:''}){
+ const root=$('editors'),row=document.createElement('details');row.className='editor';row._image=p.scene==='custom'?p.image:'';
+ const summary=document.createElement('summary');summary.className='editor-summary';
+ const body=document.createElement('div');body.className='editor-body';
+ const top=document.createElement('div');top.className='editor-top';
+ const del=document.createElement('button');del.className='btn danger';del.type='button';del.textContent='删除这幅图';
+ del.onclick=()=>{
+  if(root.children.length===1){root.replaceChildren();addEditor()}
+  else{row.remove();renumber()}
+ };
+ top.append(del);
+ const grid=document.createElement('div');grid.className='editor-grid';
+ grid.append(makeField(row,'title','场景标题',p.title,{help:'例如：雨天一起撑伞'}));
+ const sceneGroup=document.createElement('div');sceneGroup.className='wide';
+ const sceneLabel=document.createElement('label');sceneLabel.textContent='插图选择';
+ const select=document.createElement('select');select.className='edit-scene';
+ const choices=[...SCENES,{key:'custom',name:'上传自定义图片'}];
+ choices.forEach(o=>{const option=document.createElement('option');option.value=o.key;option.textContent=o.name;select.append(option)});
+ select.value=p.scene||'school';
+ const art=document.createElement('div');art.className='art-holder';art.style.marginTop='10px';
+ const upload=document.createElement('div');upload.className='upload-box';
+ const fileLabel=document.createElement('label');fileLabel.textContent='上传 JPG / PNG / WebP 图片（单张不超过 8 MB，自动压缩后纳入 JSON）';
+ const fileInput=document.createElement('input');fileInput.type='file';fileInput.accept='image/png,image/jpeg,image/webp';
+ const fileInfo=document.createElement('div');fileInfo.className='upload-status';
+ upload.append(fileLabel,fileInput,fileInfo);sceneGroup.append(sceneLabel,select,art,upload);
+ const refresh=()=>{
+  const fake={scene:select.value,image:row._image,title:row.querySelector('.edit-title')?.value||p.title};
+  if(fake.scene==='custom'&&!fake.image){
+   art.replaceChildren();const missing=document.createElement('p');missing.className='hint';missing.style.padding='15px';missing.textContent='请上传图片，才可以使用自定义场景。';art.append(missing);
+  }else renderArt(art,fake);
+  upload.hidden=select.value!=='custom';
+  updateSummary(row);
+ };
+ select.onchange=refresh;
+ fileInput.onchange=async()=>{
+  const f=fileInput.files?.[0];if(!f)return;
+  fileInfo.textContent='正在处理图片…';
+  try{
+   const img=await imageToJPEG(f);
+   if(!row.isConnected)return;
+   row._image=img;select.value='custom';refresh();
+   fileInfo.textContent='✓ 图片已压缩并载入。导出 JSON 时将一并保存。';
+  }catch(e){fileInfo.textContent='无法使用图片：'+(e.message||'格式错误')}
+  fileInput.value='';
+ };
+ grid.append(sceneGroup);
+ grid.append(
+  makeField(row,'questions','引导问题（每行一个，共 3 至 6 题）',(p.questions||[]).join('\n'),{multiline:true,help:'图中有谁？在哪里？\n发生了什么事？\n你有什么感受？'}),
+  makeField(row,'keywords','提示词（每行一个，最多 10 个）',(p.keywords||[]).join('\n'),{multiline:true,help:'关心\n分享\n感谢'}),
+  makeField(row,'model','老师的参考表达（建议一段完整的话）',p.model,{multiline:true,help:'示范如何把观察到的事情组织成通顺连贯的一段话。'})
+ );
+ body.append(top,grid);row.append(summary,body);root.append(row);
+ renumber();row.open=root.children.length===1;refresh();
+ row.querySelector('.edit-title').oninput=()=>updateSummary(row);
+ return row;
+}
+function imageToJPEG(file){
+ return new Promise((resolve,reject)=>{
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))return reject(Error('请选择 JPG、PNG 或 WebP 文件。'));
+  if(file.size>8*1024*1024)return reject(Error('图片不能超过 8 MB。'));
+  const reader=new FileReader();
+  reader.onerror=()=>reject(Error('无法读取图片。'));
+  reader.onload=()=>{
+   const image=new Image();
+   image.onerror=()=>reject(Error('图片无法解码。'));
+   image.onload=()=>{
+    try{
+     const longest=Math.max(image.naturalWidth,image.naturalHeight);
+     if(longest<1)throw Error('图片尺寸无效。');
+     const factor=Math.min(1,1100/longest);
+     const canvas=document.createElement('canvas');
+     canvas.width=Math.max(1,Math.round(image.naturalWidth*factor));
+     canvas.height=Math.max(1,Math.round(image.naturalHeight*factor));
+     const ctx=canvas.getContext('2d');if(!ctx)throw Error('浏览器无法处理图片。');
+     ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+     ctx.drawImage(image,0,0,canvas.width,canvas.height);
+     let data=canvas.toDataURL('image/jpeg',.75);
+     if(data.length>1700000)data=canvas.toDataURL('image/jpeg',.48);
+     if(data.length>1700000)throw Error('压缩后仍太大，请使用较小的图片。');
+     resolve(data);
+    }catch(e){reject(e)}
+   };
+   image.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
+}
+function renumber(){
+ [...$('editors').children].forEach(row=>updateSummary(row));
+}
+function updateSummary(row){
+ const i=[...$('editors').children].indexOf(row);
+ const name=trim(row.querySelector('.edit-title')?.value);
+ row.querySelector('.editor-summary').textContent='第 '+(i+1)+' 幅 · '+(name||'新看图说话场景（点击编辑）');
+}
+function editorPicture(row){
+ return {title:trim(row.querySelector('.edit-title').value),scene:row.querySelector('.edit-scene').value,
+  image:row.querySelector('.edit-scene').value==='custom'?row._image:'',
+  questions:lines(row.querySelector('.edit-questions').value),keywords:lines(row.querySelector('.edit-keywords').value),
+  model:trim(row.querySelector('.edit-model').value)};
+}
+function readEditors(){
+ return [...$('editors').children].map(editorPicture).filter(p=>p.title||p.questions.length||p.keywords.length||p.model||p.image);
+}
+function syncPictures(){
+ const list=readEditors();
+ if(!list.length){message('请先添加至少一幅图片或载入示例。',true);return false}
+ if(list.length>20){message('一次最多支持 20 幅图片。',true);return false}
+ for(let i=0;i<list.length;i++){
+  const error=validatePicture(list[i],i);
+  if(error){message(error,true);return false}
+ }
+ pictures=list.map(clonePicture);
+ message('✓ 已准备 '+pictures.length+' 幅图片，请检查问题及参考表达。');return true;
+}
+function loadAllExamples(){
+ if(readEditors().length&&!window.confirm('载入五幅示例会替换目前编辑的内容。确定继续吗？'))return;
+ $('editors').replaceChildren();
+ pictures=EXAMPLES.map(clonePicture);pictures.forEach(addEditor);
+ $('activityTitle').value='看图说话';
+ message('✓ 已载入全部 5 幅插图，仍在教师设置。可以修改后再预览。');
+ setSection('setup');
+}
+function loadExample(i){
+ const sample=EXAMPLES[i];if(!sample)return;
+ if(readEditors().some(p=>p.title===sample.title&&p.scene===sample.scene)){message('这幅示例已经添加。');return}
+ const empty=[...$('editors').children].find(row=>{
+  const p=editorPicture(row);return !p.title&&!p.questions.length&&!p.keywords.length&&!p.model&&!p.image;
+ });
+ if(empty){const idx=[...$('editors').children].indexOf(empty);empty.remove();addEditor(sample);const newRow=$('editors').lastElementChild;
+  if(idx>=0&&newRow&&idx<$('editors').children.length-1)$('editors').insertBefore(newRow,$('editors').children[idx]);renumber();
+ }else addEditor(sample);
+ message('✓ 已添加《'+sample.title+'》，仍在教师设置。');setSection('setup');
+}
+function renderExamples(){
+ const host=$('exampleList');host.replaceChildren();
+ EXAMPLES.forEach((q,i)=>{
+  const card=document.createElement('div');card.className='example-item';
+  const thumb=document.createElement('div');thumb.className='example-thumb';renderArt(thumb,q);
+  const details=document.createElement('div');details.className='example-info';
+  const title=document.createElement('strong');title.textContent=(i+1)+'. '+q.title;
+  const note=document.createElement('span');note.textContent=q.questions.length+' 个观察问题 · '+q.keywords.length+' 个提示词';
+  details.append(title,note);
+  const button=document.createElement('button');button.type='button';button.className='btn secondary';button.textContent='＋ 使用此图';
+  button.setAttribute('aria-label','添加示例 '+(i+1));button.onclick=()=>loadExample(i);
+  card.append(thumb,details,button);host.append(card);
+ });
+}
+function renderPreview(){
+ const host=$('previewItems');host.replaceChildren();
+ pictures.forEach((q,i)=>{
+  const card=document.createElement('div');card.className='preview-card';
+  const index=document.createElement('div');index.className='preview-number';index.textContent='第 '+(i+1)+' 幅 · '+q.title;
+  const artwork=document.createElement('div');artwork.className='preview-art art-holder';renderArt(artwork,q);
+  const header=document.createElement('h3');header.textContent='引导问题';
+  const prompt=document.createElement('ol');prompt.className='preview-prompts';
+  q.questions.forEach(s=>{const li=document.createElement('li');li.textContent=s;prompt.append(li)});
+  const words=document.createElement('p');words.className='hint';words.textContent='提示词：'+(q.keywords.join(' · ')||'无');
+  const model=document.createElement('div');model.className='preview-model';model.textContent='老师范例：'+q.model;
+  card.append(index,artwork,header,prompt,words,model);host.append(card);
+ });
+}
+function prepare(){if(!syncPictures())return;renderPreview();setSection('preview')}
+function start(){
+ if(!pictures.length)return;
+ current=0;completed=pictures.map(()=>false);loadPicture();setSection('play');
+}
+function renderChecks(){
+ const host=$('selfChecks');host.replaceChildren();
+ CHECKS.forEach((text,i)=>{
+  const label=document.createElement('label');label.className='check-option';
+  const input=document.createElement('input');input.type='checkbox';input.className='self-check';input.setAttribute('aria-label',text);
+  input.onchange=updateChecks;
+  const span=document.createElement('span');span.textContent=text;
+  label.append(input,span);host.append(label);
+ });
+ updateChecks();
+}
+function updateChecks(){
+ const checks=$('selfChecks').querySelectorAll('input');
+ const count=[...checks].filter(x=>x.checked).length;
+ $('checkStatus').textContent='已自评 '+count+' / '+CHECKS.length+' 项。这是自我反思，不是自动评分。';
+}
+function loadPicture(){
+ stopMic(true);
+ const q=pictures[current];
+ showingKeywords=false;
+ $('progress').textContent='第 '+(current+1)+' / '+pictures.length+' 幅';
+ $('completedCount').textContent='已完成 '+completed.filter(Boolean).length+' 幅';
+ $('pictureTitle').textContent=q.title;
+ renderArt($('studentArt'),q);
+ const prompts=$('questionPrompts');prompts.replaceChildren();
+ q.questions.forEach((question,i)=>{
+  const item=document.createElement('div');item.className='prompt';
+  const num=document.createElement('span');num.className='prompt-number';num.textContent=String(i+1);
+  const text=document.createElement('span');text.textContent=question;
+  item.append(num,text);prompts.append(item);
+ });
+ const words=$('studentKeywords');words.replaceChildren();
+ q.keywords.forEach(w=>{const tag=document.createElement('span');tag.className='keyword';tag.textContent=w;words.append(tag)});
+ words.classList.add('hidden');
+ $('showKeywords').textContent='💡 显示提示词';
+ $('oralTranscript').value='';
+ $('spokeOffline').checked=false;
+ $('micInfo').textContent='';
+ $('studentStatus').textContent='';
+ $('reviewPanel').classList.add('hidden');
+ $('modelArea').classList.add('hidden');
+ $('modelText').textContent=q.model;
+ $('revealModel').textContent='📖 查看老师的参考表达';
+ $('nextPicture').textContent=current===pictures.length-1?'查看完成情况 →':'下一幅图 →';
+ renderChecks();
+}
+function finishSpeaking(){
+ if(voice){$('studentStatus').textContent='请先停止麦克风录音，再开始自评。';return}
+ if(!trim($('oralTranscript').value)&&!$('spokeOffline').checked){
+  $('studentStatus').textContent='请先口述并勾选确认，或使用语音输入／文字写下自己的表达。';return;
+ }
+ completed[current]=true;
+ $('completedCount').textContent='已完成 '+completed.filter(Boolean).length+' 幅';
+ $('reviewPanel').classList.remove('hidden');
+ $('studentStatus').textContent='✓ 口语练习已完成！请自评表达是否清楚、完整。';
+ $('studentStatus').classList.add('good');
+}
+function tryAgain(){
+ loadPicture();
+}
+function nextPicture(){
+ stopMic(true);
+ if(!completed[current])return;
+ if(current<pictures.length-1){current++;loadPicture();return}
+ $('resultsText').textContent='你已完成 '+completed.filter(Boolean).length+' / '+pictures.length+' 幅看图说话练习。每幅图都可以有不同的合理表达，因此系统不对口头内容自动判分。';
+ setSection('results');
+}
+function revealModel(){
+ const area=$('modelArea');
+ const shouldShow=area.classList.contains('hidden');
+ area.classList.toggle('hidden',!shouldShow);
+ $('revealModel').textContent=shouldShow?'收起参考表达':'📖 查看老师的参考表达';
+}
+function speakModel(){
+ if(!completed[current]||!('speechSynthesis'in window))return;
+ speechSynthesis.cancel();
+ const utter=new SpeechSynthesisUtterance(pictures[current].model);
+ utter.lang='zh-CN';utter.rate=.86;
+ const voices=speechSynthesis.getVoices();
+ utter.voice=voices.find(v=>/^zh-(CN|SG)/i.test(v.lang)&&/Google|Xiaoxiao|female/i.test(v.name))||voices.find(v=>/^zh/i.test(v.lang))||null;
+ speechSynthesis.speak(utter);
+}
+function exportJSON(){
+ if(!syncPictures())return;
+ const data={app:'ChinesePictureOral',version:1,title:trim($('activityTitle').value)||'看图说话',pictures:pictures.map(clonePicture)};
+ const serialized=JSON.stringify(data,null,2);
+ if(serialized.length>18*1024*1024){message('JSON 文件过大。请减少自定义图片数量。',true);return}
+ const file=new Blob([serialized],{type:'application/json;charset=utf-8'});
+ const url=URL.createObjectURL(file),a=document.createElement('a');
+ a.href=url;a.download='看图说话-活动.json';document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+ message('✓ 已导出 '+pictures.length+' 幅图和全部教师设置（不含学生口述资料）。');
+}
+async function importJSON(file){
+ if(!file)return;
+ if(file.size>18*1024*1024){message('JSON 文件不能超过 18 MB。',true);return}
+ try{
+  const data=JSON.parse(await file.text());
+  if(!data||data.app!=='ChinesePictureOral'||data.version!==1||!Array.isArray(data.pictures)||
+   !data.pictures.length||data.pictures.length>20)throw Error('这不是有效的看图说话 JSON 文件。');
+  const restored=data.pictures.map((p,i)=>{
+   const error=validatePicture(p,i);if(error)throw Error(error);
+   return {title:trim(p.title),scene:p.scene,image:p.scene==='custom'?p.image:'',
+    questions:p.questions.map(trim),keywords:p.keywords.map(trim),model:trim(p.model)};
+  });
+  stopMic(true);
+  pictures=restored;
+  $('editors').replaceChildren();
+  restored.forEach(addEditor);
+  $('activityTitle').value=typeof data.title==='string'?data.title.slice(0,90):'看图说话';
+  setSection('setup');
+  message('✓ 已导入 '+pictures.length+' 幅图，包含插图、观察问题、提示词和参考表达。');
+ }catch(e){message('导入失败：'+(e.message||'文件格式错误'),true)}
+}
+$('loadAllExamples').onclick=loadAllExamples;
+$('addPicture').onclick=()=>addEditor();
+$('prepare').onclick=prepare;
+$('generate').onclick=start;
+$('backSetup').onclick=()=>setSection('setup');
+$('exportJson').onclick=exportJSON;
+$('exportPreview').onclick=exportJSON;
+$('importJson').onclick=()=>$('importFile').click();
+$('importFile').onchange=async e=>{await importJSON(e.target.files?.[0]);e.target.value=''};
+$('fullScreenPicture').onclick=()=>{
+ const art=$('studentArt');
+ if(document.fullscreenElement){document.exitFullscreen?.();return}
+ if(art.requestFullscreen)art.requestFullscreen().catch(()=>{$('micInfo').textContent='当前浏览器不支持图片全屏显示。'});
+};
+$('showKeywords').onclick=()=>{
+ showingKeywords=!showingKeywords;
+ $('studentKeywords').classList.toggle('hidden',!showingKeywords);
+ $('showKeywords').textContent=showingKeywords?'收起提示词':'💡 显示提示词';
+};
+$('toggleMic').onclick=microphone;
+$('clearTranscript').onclick=()=>{$('oralTranscript').value='';$('studentStatus').textContent='';};
+$('finishSpeaking').onclick=finishSpeaking;
+$('backTeacher').onclick=()=>setSection('setup');
+$('revealModel').onclick=revealModel;
+$('readModel').onclick=speakModel;
+$('tryAgain').onclick=tryAgain;
+$('nextPicture').onclick=nextPicture;
+$('repeatAll').onclick=start;
+$('resultsTeacher').onclick=()=>setSection('setup');
+renderExamples();
+addEditor();
+</script>
+</body>
+</html>
