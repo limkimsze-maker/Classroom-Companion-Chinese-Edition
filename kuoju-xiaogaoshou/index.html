@@ -350,7 +350,7 @@ function addEditor(q={title:'',subject:'',action:'',clue:'',time:'',place:'',man
  if(!q.subject&&row.open)row.querySelector('.field-subject').focus();
  return row;
 }
-function renumber(){[...$('editors').children].forEach((row,i)=>{row.dataset={...row.dataset,index:i};updateSummary(row)})}
+function renumber(){[...$('editors').children].forEach(row=>updateSummary(row))}
 function updateSummary(row){
  const i=[...$('editors').children].indexOf(row);
  const title=trim(row.querySelector('.field-title')?.value);
