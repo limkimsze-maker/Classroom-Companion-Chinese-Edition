@@ -24,8 +24,7 @@ const TOOLS=[
  {slug:'attention-signal',icon:'👀',title:'注意信号',mode:'mini'},
  {slug:'noise-level',icon:'🔊',title:'音量等级',mode:'mini'},
  {slug:'question-spinner',icon:'💬',title:'句子开头',mode:'half'},
- {slug:'sentence-order',icon:'🧩',title:'句子排序',mode:'full'},
- {slug:'vocabulary-cloze',icon:'📝',title:'选词填空',mode:'full'},
+ {slug:'chinese-adventure-island',icon:'🏝️',title:'中文奇妙岛',mode:'full'},
  {slug:'confidence-check',icon:'📈',title:'学习信心',mode:'half'},
  {slug:'pick-a-pupil',icon:'🎯',title:'随机点名',mode:'mini'},
  {slug:'make-groups',icon:'👥',title:'随机分组',mode:'half'},
@@ -39,8 +38,7 @@ const TOOLS=[
  {slug:'daily-visual-timetable',icon:'🗓️',title:'每日视觉课表',mode:'full'}
 ];
 const DIRECT={
- 'sentence-order':'juzi-paixu/?edition=zh',
- 'vocabulary-cloze':'xuanci-tiankong/?edition=zh',
+ 'chinese-adventure-island':'zhongwen-qimiaodao/?from=companion',
  'class-organisation':'page.html?src='+encodeURIComponent('class-organisation.html'),
  'daily-duty-roster':'page.html?src='+encodeURIComponent('daily-duty-roster.html'),
  'pupil-reward-points':'page.html?src='+encodeURIComponent('reward-points.html?mode=pupil'),
@@ -62,6 +60,11 @@ for(const t of TOOLS){const b=document.createElement('button');b.type='button';b
 
 const favKey='ccLauncherFavourites_ZH_v1';let fav=[];
 try{const v=JSON.parse(localStorage.getItem(favKey)||'[]');if(Array.isArray(v))fav=v.filter(x=>typeof x==='string')}catch(e){}
+ // Preserve existing favourites when two separate Chinese activities become one learning hub.
+ if(fav.includes('sentence-order')||fav.includes('vocabulary-cloze')){
+  fav=[...new Set(fav.map(x=>x==='sentence-order'||x==='vocabulary-cloze'?'chinese-adventure-island':x))];
+  try{localStorage.setItem(favKey,JSON.stringify(fav))}catch(e){}
+ }
 function decorateFavourites(){
  const tools=[...TOOLS,...(typeof EXTRA_TOOLS!=='undefined'?EXTRA_TOOLS:[])];
  const all=tools.map(t=>({t,b:buttons.get(t.slug)})).filter(x=>x.b);
