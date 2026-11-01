@@ -663,7 +663,7 @@ addEditor();
    gear.title=teacher?'教师设置已打开：修改题目后点击保存并开始练习':'教师设置：修改或添加练习题';
  };
  const teacherMode=()=>{
-   showSection('setup');
+   setSection('setup');
    setMode(true);
  };
  gear.addEventListener('click',teacherMode);
