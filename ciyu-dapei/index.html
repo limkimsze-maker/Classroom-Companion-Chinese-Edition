@@ -106,7 +106,7 @@ button.btn:disabled{opacity:.45;cursor:default}
 .result-big{text-align:center;color:#0e7765;font-size:clamp(27px,3.6vw,41px);font-weight:850;margin:24px 0}
 .result-detail{text-align:center;font-size:19px;line-height:1.7;color:#3e646d}
 footer{font-size:12px;text-align:center;color:#687f8a;padding:13px 15px 28px}
-@media(max-width:810px){.game-columns{grid-template-columns:1fr}.board.bank{order:0}.board.matches{order:1}.options-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:810px){.game-columns{grid-template-columns:1fr}.board.matches{order:0}.board.bank{order:1}.options-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){header .chip{display:none}.panel{padding:16px}.step{font-size:11px;padding:7px 9px}.editor{padding:12px}.examples{padding:13px}.match-row{gap:5px;padding:6px}.match-row .left,.match-row .slot{font-size:18px;min-height:53px;padding:7px}.option{font-size:19px}.preview-pair .term{font-size:18px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
@@ -224,8 +224,8 @@ function validateSet(s,index){
  if(!s||typeof s.title!=='string'||s.title.length>90||!Array.isArray(s.pairs))return prefix+'格式不正确。';
  if(s.pairs.length<2||s.pairs.length>10)return prefix+'应有 2 至 10 对搭配词。';
  if(s.pairs.some(p=>!p||typeof p.left!=='string'||typeof p.right!=='string'||!p.left.trim()||!p.right.trim()||p.left.length>40||p.right.length>40))return prefix+'有空白或过长的词语（每侧最多 40 字）。';
- if(new Set(s.pairs.map(p=>p.left)).size!==s.pairs.length)return prefix+'有重复的左词，请修改，以免答案不明确。';
- if(new Set(s.pairs.map(p=>p.right)).size!==s.pairs.length)return prefix+'有重复的右词，请修改，以免答案不明确。';
+ if(new Set(s.pairs.map(p=>p.left.trim())).size!==s.pairs.length)return prefix+'有重复的左词，请修改，以免答案不明确。';
+ if(new Set(s.pairs.map(p=>p.right.trim())).size!==s.pairs.length)return prefix+'有重复的右词，请修改，以免答案不明确。';
  return '';
 }
 function setSection(id){
