@@ -281,7 +281,7 @@ function createField(row,id,labelText,initial,placeholder,mode='word',multiline=
  return group;
 }
 function addEditor(q={type:'',wrong:'',fault:'',fix:'',options:[]}){
- const row=document.createElement('div');row.className='editor',root=$('editors');
+ const root=$('editors'),row=document.createElement('div');row.className='editor';
  const header=document.createElement('div');header.className='editor-header';
  const order=document.createElement('span');order.className='editor-number';order.textContent='第 '+(root.children.length+1)+' 句';
  const remove=document.createElement('button');remove.type='button';remove.className='btn danger';remove.textContent='删除这句';
@@ -411,9 +411,9 @@ function errorPieces(q){
  return [...segment(prefix).map(text=>({text,error:false})),{text:q.fault,error:true},
   ...segment(suffix).map(text=>({text,error:false}))];
 }
-function loadQuestion(){
+function loadQuestion(keepTries=false){
  const q=questions[questionIndex];
- stage='find';tries=0;chosenFault=false;repairOptions=shuffle([{id:'correct',text:q.fix},...q.options.map((x,i)=>({id:'wrong-'+i,text:x}))]);
+ stage='find';if(!keepTries)tries=0;chosenFault=false;repairOptions=shuffle([{id:'correct',text:q.fix},...q.options.map((x,i)=>({id:'wrong-'+i,text:x}))]);
  setFeedback('','');drawQuestion();
 }
 function incorrect(msg){tries++;setFeedback(msg,'bad')}
@@ -467,7 +467,7 @@ function start(){
  if(!questions.length)return;
  questionIndex=0;finished=0;firstTryScore=0;loadQuestion();showSection('play');
 }
-function restartQuestion(){if(stage==='solved')return;loadQuestion()}
+function restartQuestion(){if(stage==='solved')return;loadQuestion(true)}
 function next(){
  if(stage!=='solved')return;
  if(questionIndex<questions.length-1){questionIndex++;loadQuestion();return}
