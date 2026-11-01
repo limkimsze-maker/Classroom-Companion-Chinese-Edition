@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#116f62">
+<title>扩句小高手｜中文互动练习</title>
+<style>
+:root{--ink:#1b3947;--muted:#587580;--green:#117968;--mint:#e9f8f2;--bg:#f3f7f9;--line:#d8e5e8;--red:#ae4438;--gold:#ffde93}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);min-height:100%;font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",system-ui,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #edb047;outline-offset:3px}
+[hidden],.hidden{display:none!important}
+header{background:linear-gradient(113deg,#173e4b,#147668);color:white;padding:19px clamp(16px,4vw,45px);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:clamp(23px,3vw,31px);font-weight:900}
+.subheading{font-size:12px;color:#cdece1;margin-top:4px}
+.header-chip{white-space:nowrap;font-size:12px;border:1px solid #83c0b0;border-radius:28px;padding:7px 11px}
+main{max-width:1120px;margin:22px auto;padding:0 16px 22px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:17px}
+.steps span{border:1px solid var(--line);border-radius:25px;padding:8px 12px;background:white;color:var(--muted);font-weight:800;font-size:13px}
+.steps span.on{background:var(--mint);border-color:#a7d5c4;color:#0e7363}
+.panel{background:white;border:1px solid var(--line);border-radius:20px;box-shadow:0 9px 30px #143e4a10;padding:clamp(16px,3vw,29px);margin-bottom:17px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(26px,3vw,34px);margin-bottom:11px}
+h2{font-size:22px;margin-bottom:12px}
+h3{font-size:18px;margin-bottom:9px}
+.hint{font-size:14px;color:var(--muted);line-height:1.72}
+.small{font-size:13px}
+.btn{border:0;background:var(--green);color:white;border-radius:12px;padding:11px 16px;min-height:44px;font-weight:850}
+.btn.secondary{background:#eaf1f3;color:#335965}
+.btn.outline{background:white;color:var(--green);border:1px solid #a8d3c5}
+.btn.danger{background:#fff0ef;color:#ae483d}
+.btn:disabled{opacity:.5;cursor:default}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:17px}
+.field{margin:17px 0}
+label{display:block;font-weight:800;font-size:14px;margin:0 0 6px;color:#385c67}
+input[type=text],textarea{width:100%;border:1.5px solid #becfd6;border-radius:11px;background:white;color:var(--ink);font-size:17px;line-height:1.6;padding:11px 12px;min-width:0}
+textarea{resize:vertical;min-height:75px}
+.examples{border-radius:16px;border:1px solid #b6dfd1;background:#f0faf6;padding:16px 18px;margin:19px 0 20px}
+.examples-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:11px}
+.examples-head strong{font-size:18px;color:#0d6659}
+.examples summary{font-weight:850;color:#136c5e;cursor:pointer;padding:9px 0;margin-top:4px}
+.example-list{display:grid;gap:9px;margin-top:8px}
+.example-card{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid #d0e6dd;border-radius:12px;background:white;padding:12px}
+.example-copy{flex:1 1 440px;min-width:0}
+.example-copy strong{display:block;font-size:17px;line-height:1.55}
+.example-copy .base{display:block;font-size:14px;color:#42616c;line-height:1.6;margin-top:2px}
+.example-copy .full{display:block;font-size:14px;color:#0a7760;line-height:1.65}
+.example-card .btn{font-size:13px;min-height:39px;padding:8px 12px}
+.note{border-left:4px solid #6bbb9e;background:#f1faf6;border-radius:0 10px 10px 0;padding:12px 15px;margin:16px 0;font-size:14px;line-height:1.76;color:#446c76}
+.editor{border:1px solid var(--line);border-radius:16px;background:#fcfefe;margin:15px 0;padding:16px}
+.editor summary{cursor:pointer;font-weight:850;color:#175e57;font-size:17px;line-height:1.5;padding:3px 0}
+.editor summary::marker{color:#159580}
+.editor-body{padding-top:15px}
+.editor-top{display:flex;justify-content:flex-end;margin-bottom:9px}
+.editor-top .btn{font-size:13px;padding:8px 12px;min-height:38px}
+.editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.editor-grid .wide{grid-column:1 / -1}
+.editor-grid .small-label{font-size:13px;color:var(--muted);margin:6px 0}
+.voice-field{display:flex;align-items:stretch;gap:6px}
+.voice-field input,.voice-field textarea{flex:1}
+.voice-field .mic{flex:0 0 auto;min-width:44px;min-height:43px;padding:7px 9px;font-size:13px}
+.mic.listening{background:#bc3751;color:white}
+.voice-status{font-size:13px;color:var(--muted);min-height:18px;line-height:1.5;margin:8px 0 0}
+.status{font-size:13px;color:var(--muted);line-height:1.7;margin:13px 0 0}
+.status.bad{color:var(--red)}
+.preview-card{border:1px solid var(--line);background:#fcfefe;border-radius:16px;padding:18px;margin:15px 0}
+.preview-n{font-weight:850;color:var(--green);font-size:14px;margin-bottom:6px}
+.base-sentence{font-size:clamp(23px,2.5vw,29px);font-weight:780;line-height:1.65;margin:10px 0}
+.expanded-sentence{font-size:clamp(22px,2.5vw,29px);font-weight:800;color:#0f7663;line-height:1.75;margin:10px 0;overflow-wrap:anywhere}
+.preview-clue{background:#f1f7f8;color:#53717d;border-radius:10px;padding:11px 13px;font-size:14px;line-height:1.75}
+.preview-parts{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 0}
+.preview-part{background:#e6f5ef;color:#126a5c;border:1px solid #b6dbce;border-radius:10px;font-size:14px;font-weight:750;padding:8px 11px}
+.progress-line{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.progress{font-size:15px;color:#0b7867;font-weight:900}
+.score{font-size:14px;color:var(--muted)}
+.question-title{margin:16px 0 11px}
+.core-box{border:1px solid #cee1e5;background:#f7fbfc;border-radius:16px;padding:16px;margin:12px 0}
+.core-box .mini{font-size:12px;font-weight:800;color:#62808a;margin:0 0 6px}
+.core-box .text{font-size:clamp(25px,3vw,36px);font-weight:900;line-height:1.65;margin:0}
+.clue{background:#fff7e8;border-left:4px solid #edbc58;padding:13px 15px;border-radius:0 11px 11px 0;font-size:17px;line-height:1.8;color:#715229;margin:15px 0 21px}
+.choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.choice-group{border:1px solid #cddfdf;border-radius:15px;padding:13px;background:#f9fcfc;min-width:0}
+.choice-group h3{font-size:17px;margin:0 0 4px}
+.choice-group .hint{font-size:12px;margin:0 0 11px}
+.choice-options{display:grid;gap:9px}
+.choice{border:1.5px solid #afcbd1;background:white;color:#164f61;border-radius:11px;padding:12px 9px;font-size:clamp(17px,1.8vw,21px);font-weight:800;min-height:53px;line-height:1.45;overflow-wrap:anywhere}
+.choice.selected{border-color:#14876d;background:#ddf5e9;color:#096858;box-shadow:0 0 0 2px #b6e4d2}
+.choice:hover,.choice:focus-visible{border-color:#0e8672}
+.build-box{border:1px solid #a6d3c5;background:#f4fbf7;border-radius:15px;padding:16px;margin:18px 0 0}
+.build-label{font-size:13px;font-weight:850;color:#1b7967;margin:0 0 7px}
+.build-sentence{font-size:clamp(22px,2.4vw,29px);font-weight:750;line-height:1.85;overflow-wrap:anywhere}
+.placeholder{color:#769ca2;border-bottom:2px dashed #89b5b3}
+.feedback{font-size:17px;font-weight:850;min-height:31px;line-height:1.65;margin:13px 0}
+.feedback.good{color:#117d65}.feedback.bad{color:#b34c3b}
+.result{font-size:clamp(28px,4vw,40px);font-weight:900;color:#0e7866;text-align:center;margin:24px 0}
+.result-copy{font-size:19px;color:#456a75;text-align:center;line-height:1.75}
+.creative{border:1px solid #bfdbd2;border-radius:15px;background:#fbfefd;padding:16px;margin:16px 0 4px}
+.creative h3{margin:0 0 6px}
+.creative textarea{min-height:100px}
+.creative .reflection{padding:10px 13px;margin-top:10px;background:#e8f7ef;color:#176d5c;border-radius:11px;font-size:14px;line-height:1.7}
+footer{text-align:center;color:#71858e;font-size:12px;padding:15px 17px 28px}
+@media(max-width:820px){.choice-grid{grid-template-columns:1fr}.choice-options{grid-template-columns:repeat(3,minmax(0,1fr))}.choice{padding:10px 7px;font-size:17px}}
+@media(max-width:600px){header .header-chip{display:none}.panel{padding:16px}.editor-grid{grid-template-columns:1fr}.editor-grid .wide{grid-column:1}.examples{padding:13px}.choice-options{grid-template-columns:1fr}.choice-grid{gap:10px}.step{font-size:11px!important;padding:7px 9px!important}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">✍️ 扩句小高手</div><div class="subheading">中文互动练习 · 为简单句子增添细节</div></div><div class="header-chip">独立中文教学工具</div></header>
+<main>
+<nav class="steps" aria-label="活动步骤"><span id="step1" class="step on">1 · 教师设置</span><span id="step2" class="step">2 · 检查范例</span><span id="step3" class="step">3 · 学生练习</span></nav>
+<section id="setup" class="panel">
+<h1>教师设置</h1>
+<p class="hint">本活动聚焦三种扩句方法：<strong>什么时候、在哪里、怎么样</strong>。请先填写“谁”和“做什么”，再提供三个正确的扩句短语及每栏两个干扰短语。系统会显示线索，让学生选择合适的扩句内容。</p>
+<div class="examples">
+ <div class="examples-head"><strong>📚 5 个可直接使用的扩句示例</strong><button id="loadAllExamples" class="btn outline" type="button">载入全部 5 题</button></div>
+ <p class="hint small" style="margin:9px 0">载入后会留在教师设置，不会自动开始学生练习。你也可以逐题添加，并自由修改线索与答案。</p>
+ <details><summary>查看五个例句并逐题添加</summary><div id="exampleList" class="example-list"></div></details>
+</div>
+<div class="field"><label for="activityTitle">活动名称（可选）</label><input id="activityTitle" type="text" maxlength="90" value="扩句小高手" placeholder="例如：第三课扩句练习"></div>
+<div id="editors"></div>
+<div class="toolbar"><button id="addQuestion" class="btn secondary" type="button">＋ 添加一道扩句题</button></div>
+<div class="note"><strong>教师提示：</strong>系统采用固定句型：<strong>时间，谁＋地点＋怎样＋做什么。</strong>
+例如“清晨，小鸟在树枝上欢快地唱歌。”为确保自动评分公平，每道题会显示具体情境线索，学生需选出与线索相符的三个短语。
+<strong>自由创作不设唯一标准答案</strong>，只供学生写作和自我比较。</div>
+<div class="toolbar">
+ <button id="prepare" class="btn" type="button">下一步：检查范例 →</button>
+ <button id="exportJson" class="btn outline" type="button">⬇ 导出 JSON</button>
+ <button id="importJson" class="btn outline" type="button">⬆ 导入 JSON</button>
+ <input id="jsonFile" type="file" accept=".json,application/json" hidden>
+</div>
+<p id="setupStatus" class="status" role="status" aria-live="polite">JSON 保存教师设置、正确答案和每栏的两个干扰短语。</p>
+</section>
+<section id="preview" class="panel hidden">
+<h1>检查教师范例</h1>
+<p class="hint">确认简单句、情境线索和完整扩句互相符合，避免出现两个同样正确的选项。学生完成三个选择后会看到老师设定的范例。</p>
+<div id="previewItems"></div>
+<div class="toolbar"><button id="generate" class="btn" type="button">生成学生练习 →</button><button id="backSetup" class="btn secondary" type="button">← 返回教师设置</button><button id="exportPreview" class="btn outline" type="button">⬇ 导出 JSON</button></div>
+</section>
+<section id="play" class="panel hidden">
+ <div class="progress-line"><span id="progress" class="progress"></span><span id="score" class="score"></span></div>
+ <h2 id="quizTitle" class="question-title">扩句小高手</h2>
+ <div class="core-box"><div class="mini">原来的简单句</div><div id="baseSentence" class="text"></div></div>
+ <div class="clue"><strong>🔍 情境线索：</strong><span id="clue"></span></div>
+ <p class="hint">根据线索，在每一栏选一个合适的短语，组成更具体、生动的句子。</p>
+ <div id="choiceGrid" class="choice-grid"></div>
+ <div class="build-box"><div class="build-label">✍️ 我的扩句</div><div id="builtSentence" class="build-sentence" aria-live="polite"></div></div>
+ <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+ <div class="toolbar">
+  <button id="submit" class="btn" type="button">✓ 提交扩句</button>
+  <button id="clear" class="btn secondary" type="button">重新选择</button>
+  <button id="read" class="btn outline" type="button" hidden>🔊 朗读范例</button>
+  <button id="next" class="btn" type="button" hidden>下一题 →</button>
+  <button id="teacher" class="btn secondary" type="button">教师设置</button>
+ </div>
+ <div id="creative" class="creative hidden">
+  <h3>🌱 创意扩句挑战（不计分）</h3>
+  <p class="hint">除了老师的范例，你还能写出另一句合理、有意义的扩句吗？可以改变时间、地点或描写方式。这里没有唯一答案，系统不会自动判断自由创作对错。</p>
+  <label for="creativeAnswer">我的创意扩句</label>
+  <textarea id="creativeAnswer" placeholder="试着写下另一种合理的扩句……" maxlength="600"></textarea>
+  <div class="toolbar"><button id="reflect" class="btn secondary" type="button">我写好了</button></div>
+  <div id="creativeFeedback" class="reflection hidden"></div>
+ </div>
+</section>
+<section id="results" class="panel hidden">
+ <div class="result">🎉 扩句练习完成！</div>
+ <p id="resultDetail" class="result-copy"></p>
+ <div class="toolbar" style="justify-content:center"><button id="again" class="btn" type="button">再练一次</button><button id="resultTeacher" class="btn secondary" type="button">返回教师设置</button></div>
+</section>
+</main>
+<footer>扩句小高手 · 中文互动练习 · Created by Lim Kim Sze · 本页不保存录音；语音识别或朗读服务可能需要联网</footer>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const SpeechRecognitionClass=window.SpeechRecognition||window.webkitSpeechRecognition;
+const CATEGORIES=[
+ {key:'time',label:'① 什么时候',hint:'选择符合情境的时间'},
+ {key:'place',label:'② 在哪里',hint:'选择符合情境的地点'},
+ {key:'manner',label:'③ 怎么样',hint:'选择符合情境的动作方式'}
+];
+const EXAMPLES=[
+ {title:'快乐的小鸟',subject:'小鸟',action:'唱歌',clue:'太阳刚刚升起，小鸟停在树枝上，叫声轻快动听。',
+  time:'清晨',place:'在树枝上',manner:'欢快地',
+  distractors:{time:['深夜','中午'],place:['在海底','在鱼缸里'],manner:['伤心地','吃力地']}},
+ {title:'放学后的球赛',subject:'同学们',action:'打篮球',clue:'学校放学了，大家来到操场，打球时十分兴奋。',
+  time:'放学后',place:'在操场上',manner:'兴高采烈地',
+  distractors:{time:['上课时','半夜'],place:['在图书馆里','在游泳池里'],manner:['闷闷不乐地','垂头丧气地']}},
+ {title:'爸爸准备晚餐',subject:'爸爸',action:'做饭',clue:'天快黑了，爸爸走进厨房，仔细准备晚餐。',
+  time:'傍晚',place:'在厨房里',manner:'认真地',
+  distractors:{time:['清晨','半夜'],place:['在卧室里','在公园里'],manner:['马虎地','粗心地']}},
+ {title:'妹妹学画画',subject:'妹妹',action:'画画',clue:'星期六早晨，妹妹坐在客厅，一心一意地画着画。',
+  time:'星期六早上',place:'在客厅里',manner:'专心地',
+  distractors:{time:['星期一晚上','深夜'],place:['在跑道上','在食堂里'],manner:['心不在焉地','漫不经心地']}},
+ {title:'老师讲故事',subject:'老师',action:'讲故事',clue:'午饭过后，老师站在教室里，讲得有声有色。',
+  time:'下午',place:'在教室里',manner:'生动地',
+  distractors:{time:['凌晨','深夜'],place:['在游泳池里','在菜市场里'],manner:['含糊地','结结巴巴地']}}
+];
+let questions=[],current=0,selected={},options={},attempts=0,firstTry=0,finished=0,solved=false,activeMic=null;
+function trim(value){return String(value||'').trim()}
+function cleanWords(str){return String(str||'').split(/[、，,；;|\n]+/u).map(trim).filter(Boolean)}
+function clearEnding(s){return trim(s).replace(/[。！？.!?]+$/u,'').trim()}
+function baseSentence(q){return clearEnding(q.subject)+clearEnding(q.action)+'。'}
+function expandedSentence(q,chosen){
+ const part=chosen||q;
+ return trim(part.time)+'，'+clearEnding(q.subject)+trim(part.place)+trim(part.manner)+clearEnding(q.action)+'。';
+}
+function cloneQuestion(q){
+ return {title:q.title,subject:q.subject,action:q.action,clue:q.clue,time:q.time,place:q.place,manner:q.manner,
+  distractors:{time:[...q.distractors.time],place:[...q.distractors.place],manner:[...q.distractors.manner]}};
+}
+function validateQuestion(q,i){
+ const name='第 '+(i+1)+' 题';
+ if(!q||typeof q.title!=='string'||typeof q.subject!=='string'||typeof q.action!=='string'||typeof q.clue!=='string'||
+  typeof q.time!=='string'||typeof q.place!=='string'||typeof q.manner!=='string'||!q.distractors||typeof q.distractors!=='object')
+  return name+'格式不完整。';
+ if(q.title.length>90||q.subject.length>80||q.action.length>120||q.clue.length>500||
+  q.time.length>80||q.place.length>100||q.manner.length>100)return name+'的文字超过长度限制。';
+ if(!trim(q.subject)||!trim(q.action)||!trim(q.clue)||!trim(q.time)||!trim(q.place)||!trim(q.manner))
+  return name+'必须填写“谁、做什么、情境线索、时间、地点、怎样”六项。';
+ for(const group of CATEGORIES){
+  const key=group.key;
+  const list=q.distractors[key];
+  if(!Array.isArray(list)||list.length!==2||list.some(x=>typeof x!=='string'||!trim(x)||x.length>100))
+   return name+'的“'+group.label+'”必须有两个有效干扰短语。';
+  const choices=[trim(q[key]),...list.map(trim)];
+  if(new Set(choices).size!==3)return name+'的“'+group.label+'”选项重复，请修改。';
+ }
+ return '';
+}
+function setSection(id){
+ for(const name of ['setup','preview','play','results'])$(name).classList.toggle('hidden',name!==id);
+ const step=id==='setup'?1:id==='preview'?2:3;
+ for(let i=1;i<=3;i++)$('step'+i).classList.toggle('on',i===step);
+ if(window.speechSynthesis)window.speechSynthesis.cancel();
+ try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}
+}
+function setStatus(message,bad=false){$('setupStatus').textContent=message;$('setupStatus').classList.toggle('bad',!!bad)}
+function setFeedback(message='',kind=''){
+ const el=$('feedback');el.textContent=message;el.className='feedback'+(kind?' '+kind:'');
+}
+function stopMic(abort=false){
+ if(!activeMic)return;
+ try{abort?activeMic.rec.abort():activeMic.rec.stop()}catch(e){}
+}
+function clearMic(){
+ if(!activeMic)return;
+ const old=activeMic;activeMic=null;
+ old.button.classList.remove('listening');
+ old.button.textContent='🎤';old.button.setAttribute('aria-pressed','false');
+}
+function spoken(s,kind){
+ let txt=String(s||'').trim();
+ if(kind==='decoys')txt=txt.replace(/^[，,。！？!?；;：:"“”'\s]+|[，,。！？!?；;：:"“”'\s]+$/gu,'').trim();
+ return txt;
+}
+function record(row,input,button,kind){
+ const status=row.querySelector('.voice-status');
+ if(activeMic){
+  if(activeMic.button===button){status.textContent='正在停止录音…';stopMic();return}
+  stopMic(true);clearMic();
+ }
+ if(!SpeechRecognitionClass){status.textContent='当前浏览器不支持语音输入，请使用 Chrome / Edge 或键盘输入。';return}
+ let rec;
+ try{rec=new SpeechRecognitionClass();rec.lang='zh-CN';rec.continuous=false;rec.interimResults=true;rec.maxAlternatives=1}
+ catch(e){status.textContent='语音识别无法启动，请直接键入。';return}
+ const original=input.value;let final='',failure=false;
+ rec.onstart=()=>{if(activeMic?.rec===rec)status.textContent='🔴 正在聆听，请说普通话。'};
+ rec.onresult=e=>{
+  if(activeMic?.rec!==rec||!row.isConnected)return;
+  const text=[],interim=[];
+  for(let i=0;i<e.results.length;i++){
+   const value=e.results[i][0]?.transcript||'';
+   (e.results[i].isFinal?text:interim).push(value);
+  }
+  final=spoken(text.join(''),kind);
+  status.textContent=interim.length?'识别中：'+interim.join(''):'识别结果：'+(final||'…');
+ };
+ rec.onerror=e=>{
+  if(activeMic?.rec!==rec)return;failure=true;
+  const messages={'not-allowed':'麦克风权限未获允许。','no-speech':'没有检测到声音。','audio-capture':'未检测到麦克风。','network':'语音识别服务暂时无法连接。'};
+  status.textContent=messages[e.error]||'语音识别失败，请重试。';
+ };
+ rec.onend=()=>{
+  if(activeMic?.rec!==rec)return;
+  clearMic();
+  if(failure)return;
+  if(!final){status.textContent='没有识别到内容，请再试一次。';return}
+  const sep=kind==='decoys'&&trim(original)?'、':'';
+  input.value=kind==='decoys'?original+sep+final:final;
+  status.textContent='已填写：'+final+'。请核对文字。';
+  updateSummary(row);
+ };
+ activeMic={rec,button,row};
+ button.classList.add('listening');button.textContent='■';button.setAttribute('aria-pressed','true');
+ status.textContent='正在申请麦克风权限…';
+ try{rec.start()}catch(e){clearMic();status.textContent='启动麦克风失败，请检查浏览器权限。'}
+}
+function field(row,key,labelText,value,placeholder,{wide=false,multiline=false,voice=true,kind='phrase'}={}){
+ const item=document.createElement('div');item.className='edit-field'+(wide?' wide':'');
+ const label=document.createElement('label');label.textContent=labelText;
+ const holder=document.createElement('div');holder.className='voice-field';
+ const input=document.createElement(multiline?'textarea':'input');
+ input.className='field-'+key;input.id='expand-'+key+'-'+Math.random().toString(36).slice(2,10);
+ if(!multiline)input.type='text';
+ input.value=value||'';input.placeholder=placeholder;input.maxLength=multiline?500:kind==='decoys'?225:kind==='title'?90:120;
+ label.htmlFor=input.id;input.oninput=()=>updateSummary(row);
+ holder.append(input);
+ if(voice){
+  const mic=document.createElement('button');mic.type='button';mic.className='btn secondary mic';mic.textContent='🎤';
+  mic.setAttribute('aria-label','语音输入：'+labelText);mic.setAttribute('aria-pressed','false');
+  mic.onclick=()=>record(row,input,mic,kind);
+  holder.append(mic);
+ }
+ item.append(label,holder);return item;
+}
+function addEditor(q={title:'',subject:'',action:'',clue:'',time:'',place:'',manner:'',distractors:{time:[],place:[],manner:[]}}){
+ const root=$('editors'),row=document.createElement('details');row.className='editor';
+ const summary=document.createElement('summary');summary.className='editor-summary';
+ const body=document.createElement('div');body.className='editor-body';
+ const head=document.createElement('div');head.className='editor-top';
+ const remove=document.createElement('button');remove.type='button';remove.className='btn danger';remove.textContent='删除这题';
+ remove.onclick=()=>{
+  if(activeMic?.row===row){stopMic(true);clearMic()}
+  if(root.children.length===1){
+   for(const control of row.querySelectorAll('input,textarea'))control.value='';
+   updateSummary(row);
+  }else{row.remove();renumber()}
+ };
+ head.append(remove);
+ const grid=document.createElement('div');grid.className='editor-grid';
+ grid.append(
+  field(row,'title','题目名称（可选）',q.title,'例如：快乐的小鸟',{voice:false,kind:'title'}),
+  field(row,'clue','情境线索（帮助学生选出唯一答案）',q.clue,'例如：太阳刚升起，小鸟停在树枝上，心情很快乐。',{wide:true,multiline:true,kind:'clue'}),
+  field(row,'subject','谁 / 什么',q.subject,'例如：小鸟'),
+  field(row,'action','做什么',q.action,'例如：唱歌'),
+  field(row,'time','正确时间短语',q.time,'例如：清晨'),
+  field(row,'timeDecoys','时间的两个干扰短语',(q.distractors?.time||[]).join('、'),'例如：深夜、中午',{kind:'decoys'}),
+  field(row,'place','正确地点短语',q.place,'例如：在树枝上'),
+  field(row,'placeDecoys','地点的两个干扰短语',(q.distractors?.place||[]).join('、'),'例如：在海底、在鱼缸里',{kind:'decoys'}),
+  field(row,'manner','正确描写短语',q.manner,'例如：欢快地'),
+  field(row,'mannerDecoys','描写的两个干扰短语',(q.distractors?.manner||[]).join('、'),'例如：伤心地、吃力地',{kind:'decoys'})
+ );
+ const voiceStatus=document.createElement('div');voiceStatus.className='voice-status';voiceStatus.setAttribute('role','status');voiceStatus.setAttribute('aria-live','polite');
+ body.append(head,grid,voiceStatus);
+ row.append(summary,body);
+ root.append(row);row.open=root.children.length===1;
+ renumber();updateSummary(row);
+ if(!q.subject&&row.open)row.querySelector('.field-subject').focus();
+ return row;
+}
+function renumber(){[...$('editors').children].forEach((row,i)=>{row.dataset={...row.dataset,index:i};updateSummary(row)})}
+function updateSummary(row){
+ const i=[...$('editors').children].indexOf(row);
+ const title=trim(row.querySelector('.field-title')?.value);
+ const subject=trim(row.querySelector('.field-subject')?.value);
+ const action=trim(row.querySelector('.field-action')?.value);
+ row.querySelector('.editor-summary').textContent='第 '+(i+1)+' 题 · '+(title||[subject,action].filter(Boolean).join('')||'新增扩句题（点击编辑）');
+}
+function readEditor(row){
+ const get=name=>trim(row.querySelector('.field-'+name).value);
+ return {title:get('title'),subject:get('subject'),action:get('action'),clue:get('clue'),
+  time:get('time'),place:get('place'),manner:get('manner'),
+  distractors:{time:cleanWords(get('timeDecoys')),place:cleanWords(get('placeDecoys')),manner:cleanWords(get('mannerDecoys'))}};
+}
+function readEditors(){
+ return [...$('editors').children].map(readEditor).filter(q=>q.title||q.subject||q.action||q.clue||q.time||q.place||q.manner||
+   CATEGORIES.some(c=>q.distractors[c.key].length));
+}
+function syncQuestions(){
+ if(activeMic){setStatus('请先停止语音输入，再继续。',true);return false}
+ const items=readEditors();
+ if(!items.length){setStatus('请先输入至少一道扩句题，或载入示例。',true);return false}
+ if(items.length>50){setStatus('最多支持 50 道扩句题。',true);return false}
+ for(let i=0;i<items.length;i++){
+  const problem=validateQuestion(items[i],i);
+  if(problem){setStatus(problem,true);return false}
+ }
+ questions=items.map(cloneQuestion);
+ setStatus('✓ 已准备 '+questions.length+' 题，请检查扩句范例。');return true;
+}
+function loadAllExamples(){
+ const existing=readEditors();
+ if(existing.length&&!window.confirm('载入全部 5 个示例会替换当前的扩句设置。确定继续吗？'))return;
+ if(activeMic){stopMic(true);clearMic()}
+ $('editors').replaceChildren();
+ questions=EXAMPLES.map(cloneQuestion);questions.forEach(addEditor);
+ $('activityTitle').value='扩句小高手';
+ setStatus('✓ 已载入全部 5 道扩句题。仍在教师设置，可以修改后再预览。');
+ setSection('setup');
+}
+function loadOneExample(i){
+ const sample=EXAMPLES[i];if(!sample)return;
+ if(readEditors().some(q=>q.subject===sample.subject&&q.action===sample.action&&q.clue===sample.clue)){
+  setStatus('这道示例已经载入，可以直接修改。');return;
+ }
+ if(activeMic){stopMic(true);clearMic()}
+ const empty=[...$('editors').children].find(row=>{
+  const q=readEditor(row);
+  return !(q.title||q.subject||q.action||q.clue||q.time||q.place||q.manner||CATEGORIES.some(c=>q.distractors[c.key].length));
+ });
+ if(empty){
+  const keys=['title','subject','action','clue','time','place','manner'];
+  keys.forEach(k=>{empty.querySelector('.field-'+k).value=sample[k]});
+  CATEGORIES.forEach(c=>{empty.querySelector('.field-'+c.key+'Decoys').value=sample.distractors[c.key].join('、')});
+  updateSummary(empty);empty.open=true;
+ }else addEditor(cloneQuestion(sample));
+ setStatus('✓ 已添加《'+sample.title+'》。仍在教师设置，可继续添加或预览。');
+ setSection('setup');
+}
+function renderExamples(){
+ const host=$('exampleList');host.replaceChildren();
+ EXAMPLES.forEach((q,i)=>{
+  const card=document.createElement('div');card.className='example-card';
+  const info=document.createElement('div');info.className='example-copy';
+  const title=document.createElement('strong');title.textContent=(i+1)+'. '+q.title;
+  const base=document.createElement('span');base.className='base';base.textContent='简单句：'+baseSentence(q);
+  const full=document.createElement('span');full.className='full';full.textContent='扩句：'+expandedSentence(q);
+  const btn=document.createElement('button');btn.type='button';btn.className='btn secondary';btn.textContent='＋ 使用此题';
+  btn.setAttribute('aria-label','添加扩句示例 '+(i+1));btn.onclick=()=>loadOneExample(i);
+  info.append(title,base,full);card.append(info,btn);host.append(card);
+ });
+}
+function renderPreview(){
+ const root=$('previewItems');root.replaceChildren();
+ questions.forEach((q,i)=>{
+  const card=document.createElement('div');card.className='preview-card';
+  const title=document.createElement('div');title.className='preview-n';title.textContent='第 '+(i+1)+' 题 · '+(q.title||'扩句练习');
+  const original=document.createElement('p');original.className='base-sentence';original.textContent=baseSentence(q);
+  const full=document.createElement('p');full.className='expanded-sentence';full.textContent=expandedSentence(q);
+  const clue=document.createElement('div');clue.className='preview-clue';clue.textContent='情境线索：'+q.clue;
+  const tags=document.createElement('div');tags.className='preview-parts';
+  CATEGORIES.forEach(c=>{
+   const tag=document.createElement('span');tag.className='preview-part';tag.textContent=c.label+'：'+q[c.key];
+   tags.append(tag);
+  });
+  card.append(title,original,full,clue,tags);root.append(card);
+ });
+}
+function prepare(){if(!syncQuestions())return;renderPreview();setSection('preview')}
+function shuffle(items){
+ const arr=[...items];
+ for(let times=0;times<15;times++){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
+  if(arr.length<2||arr.some((x,i)=>x.id!==items[i].id))return arr;
+ }
+ if(arr.length>1){[arr[0],arr[1]]=[arr[1],arr[0]]}
+ return arr;
+}
+function makeOptions(q){
+ const options={};
+ for(const cat of CATEGORIES){
+  const key=cat.key;
+  options[key]=shuffle([{id:'correct',text:q[key]},...q.distractors[key].map((x,i)=>({id:'other-'+i,text:x}))]);
+ }
+ return options;
+}
+function start(){
+ if(!questions.length)return;
+ current=0;firstTry=0;finished=0;loadQuestion();setSection('play');
+}
+function loadQuestion(){
+ const q=questions[current];
+ selected={};options=makeOptions(q);attempts=0;solved=false;
+ $('creativeAnswer').value='';$('creativeFeedback').textContent='';$('creativeFeedback').classList.add('hidden');
+ setFeedback('','');drawQuestion();
+}
+function pick(key,id){
+ if(solved)return;
+ const opt=options[key].find(x=>x.id===id);
+ if(!opt)return;
+ selected[key]=opt;
+ setFeedback('','');drawQuestion();
+}
+function previewSentence(q){
+ if(CATEGORIES.every(cat=>selected[cat.key]))return expandedSentence(q,{
+  time:selected.time.text,place:selected.place.text,manner:selected.manner.text
+ });
+ const t=selected.time?.text||'＿＿',p=selected.place?.text||'＿＿',m=selected.manner?.text||'＿＿';
+ return t+'，'+clearEnding(q.subject)+p+m+clearEnding(q.action)+'。';
+}
+function drawQuestion(){
+ const q=questions[current];
+ $('progress').textContent='第 '+(current+1)+' / '+questions.length+' 题';
+ $('score').textContent='首次答对 '+firstTry+' 题';
+ $('quizTitle').textContent=(q.title||'扩句练习')+' · '+($('activityTitle').value.trim()||'扩句小高手');
+ $('baseSentence').textContent=baseSentence(q);
+ $('clue').textContent=q.clue;
+ const grid=$('choiceGrid');grid.replaceChildren();
+ if(!solved)CATEGORIES.forEach(cat=>{
+  const group=document.createElement('div');group.className='choice-group';
+  const heading=document.createElement('h3');heading.textContent=cat.label;
+  const description=document.createElement('p');description.className='hint';description.textContent=cat.hint;
+  const buttons=document.createElement('div');buttons.className='choice-options';
+  options[cat.key].forEach(opt=>{
+   const btn=document.createElement('button');btn.type='button';
+   btn.className='choice'+(selected[cat.key]?.id===opt.id?' selected':'');
+   btn.textContent=opt.text;btn.setAttribute('aria-pressed',String(selected[cat.key]?.id===opt.id));
+   btn.setAttribute('aria-label',cat.label+'：'+opt.text);
+   btn.onclick=()=>pick(cat.key,opt.id);buttons.append(btn);
+  });
+  group.append(heading,description,buttons);grid.append(group);
+ });
+ $('builtSentence').textContent=solved?expandedSentence(q):previewSentence(q);
+ $('submit').hidden=solved;$('clear').hidden=solved;
+ $('read').hidden=!solved;$('next').hidden=!solved;
+ $('next').textContent=current===questions.length-1?'查看成绩 →':'下一题 →';
+ $('creative').classList.toggle('hidden',!solved);
+}
+function submitAnswer(){
+ if(solved)return;
+ const missing=CATEGORIES.filter(c=>!selected[c.key]).map(c=>c.label);
+ if(missing.length){setFeedback('请先选择：'+missing.join('、')+'。','bad');return}
+ attempts++;
+ if(CATEGORIES.every(c=>selected[c.key].id==='correct')){
+  solved=true;finished++;if(attempts===1)firstTry++;
+  setFeedback('✓ 扩句成功！你已根据线索选出完整的句子。','good');drawQuestion();
+ }else setFeedback('有些短语不符合情境线索。请重新检查时间、地点和描写方式。','bad');
+}
+function clearAnswer(){
+ if(solved)return;
+ selected={};setFeedback('','');drawQuestion();
+}
+function nextQuestion(){
+ if(!solved)return;
+ if(current<questions.length-1){current++;loadQuestion();return}
+ $('resultDetail').textContent='完成 '+finished+' / '+questions.length+' 题。首次答对 '+firstTry+' / '+questions.length+' 题。';
+ setSection('results');
+}
+function reflect(){
+ if(!solved)return;
+ const typed=trim($('creativeAnswer').value),box=$('creativeFeedback');
+ if(typed.length<6){
+  box.textContent='请先写出一整句有意义的扩句，再检查自己的表达。';
+  box.classList.remove('hidden');return;
+ }
+ box.textContent='你写的是：“'+typed+'”　老师的范例：“'+expandedSentence(questions[current])+'”　请比较自己的句子是否通顺、细节是否恰当。自由创作不自动判分。';
+ box.classList.remove('hidden');
+}
+function speak(){
+ if(!solved||!('speechSynthesis'in window))return;
+ speechSynthesis.cancel();
+ const utter=new SpeechSynthesisUtterance(expandedSentence(questions[current]));
+ utter.lang='zh-CN';utter.rate=.86;
+ const voices=speechSynthesis.getVoices();
+ utter.voice=voices.find(v=>/^zh-(CN|SG)/i.test(v.lang)&&/Google|Xiaoxiao|female/i.test(v.name))||
+  voices.find(v=>/^zh/i.test(v.lang))||null;
+ speechSynthesis.speak(utter);
+}
+function exportJSON(){
+ if(!syncQuestions())return;
+ const data={app:'ChineseSentenceExpansion',version:1,title:trim($('activityTitle').value)||'扩句小高手',questions:questions.map(cloneQuestion)};
+ const file=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+ const url=URL.createObjectURL(file),link=document.createElement('a');
+ link.href=url;link.download='扩句小高手-活动.json';
+ document.body.appendChild(link);link.click();link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+ setStatus('✓ 已导出 '+questions.length+' 题，包含教师范例和选择词库。');
+}
+async function importJSON(file){
+ if(!file)return;
+ if(file.size>2*1024*1024){setStatus('JSON 文件超过 2 MB，无法导入。',true);return}
+ try{
+  const data=JSON.parse(await file.text());
+  if(!data||data.app!=='ChineseSentenceExpansion'||data.version!==1||
+   !Array.isArray(data.questions)||data.questions.length<1||data.questions.length>50)
+   throw Error('这不是有效的扩句小高手 JSON 文件。');
+  const restored=data.questions.map((q,i)=>{
+   const problem=validateQuestion(q,i);
+   if(problem)throw Error(problem);
+   return {title:trim(q.title),subject:trim(q.subject),action:trim(q.action),clue:trim(q.clue),
+    time:trim(q.time),place:trim(q.place),manner:trim(q.manner),
+    distractors:{time:q.distractors.time.map(trim),place:q.distractors.place.map(trim),manner:q.distractors.manner.map(trim)}};
+  });
+  if(activeMic){stopMic(true);clearMic()}
+  questions=restored;
+  $('editors').replaceChildren();restored.forEach(addEditor);
+  $('activityTitle').value=typeof data.title==='string'?data.title.slice(0,90):'扩句小高手';
+  setSection('setup');
+  setStatus('✓ 已导入 '+questions.length+' 道扩句题，线索、标准答案和干扰词均已保留。');
+ }catch(e){setStatus('导入失败：'+(e.message||'文件格式错误'),true)}
+}
+$('loadAllExamples').onclick=loadAllExamples;
+$('addQuestion').onclick=()=>addEditor();
+$('prepare').onclick=prepare;
+$('generate').onclick=start;
+$('backSetup').onclick=()=>setSection('setup');
+$('submit').onclick=submitAnswer;
+$('clear').onclick=clearAnswer;
+$('read').onclick=speak;
+$('next').onclick=nextQuestion;
+$('teacher').onclick=()=>setSection('setup');
+$('reflect').onclick=reflect;
+$('again').onclick=()=>{current=0;finished=0;firstTry=0;loadQuestion();setSection('play')};
+$('resultTeacher').onclick=()=>setSection('setup');
+$('exportJson').onclick=exportJSON;
+$('exportPreview').onclick=exportJSON;
+$('importJson').onclick=()=>$('jsonFile').click();
+$('jsonFile').onchange=async e=>{await importJSON(e.target.files?.[0]);e.target.value=''};
+renderExamples();
+addEditor();
+</script>
+</body>
+</html>
