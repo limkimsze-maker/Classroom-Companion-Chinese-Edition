@@ -109,9 +109,39 @@ footer{font-size:12px;text-align:center;color:#687f8a;padding:13px 15px 28px}
 @media(max-width:810px){.game-columns{grid-template-columns:1fr}.board.matches{order:0}.board.bank{order:1}.options-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){header .chip{display:none}.panel{padding:16px}.step{font-size:11px;padding:7px 9px}.editor{padding:12px}.examples{padding:13px}.match-row{gap:5px;padding:6px}.match-row .left,.match-row .slot{font-size:18px;min-height:53px;padding:7px}.option{font-size:19px}.preview-pair .term{font-size:18px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Student-first controls shared by all eight Chinese activities. */
+html:not(.student-ready) main{display:none!important}
+#studentQuickNav{position:relative;z-index:95;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;padding:9px clamp(14px,3vw,32px);background:#fffdf5;border-bottom:1px solid #e6e9e2;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif}
+#studentQuickNav a{display:inline-flex;align-items:center;gap:6px;border:1px solid #deebe6;color:#176b63;background:#f0faf4;border-radius:999px;text-decoration:none;min-height:38px;padding:7px 13px;font-size:13px;font-weight:850}
+#teacherGear{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;border:1px solid #d9e3e2;border-radius:12px;padding:8px 12px;font-family:inherit;font-size:14px;font-weight:900;background:#fff;color:#345a64;box-shadow:0 2px 0 #dfe9e3;cursor:pointer}
+#teacherGear:hover{background:#eaf8f2;color:#0c7166;border-color:#a8d8c8}
+#teacherGear:focus-visible,#teacherStartNow:focus-visible,#studentQuickNav a:focus-visible{outline:3px solid #f8b547;outline-offset:3px}
+#teacherGear[aria-pressed=true]{background:#e5f5ed;color:#0b7566;border-color:#85c6b0}
+#teacherGear .gear-symbol{font-size:20px;line-height:1}
+#studentLoading{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;padding:45px 22px;text-align:center;font-size:19px;font-weight:850;color:#1b776b;background:#f5fbf6}
+html.student-ready #studentLoading{display:none!important}
+html:not(.teacher-mode) .steps{display:none!important}
+#teacherQuickActions{padding:12px 14px;border:1px solid #b8decf;border-radius:14px;background:#f0faf5;margin:12px 0 18px}
+#teacherStartNow{border:0;border-radius:12px;padding:13px 17px;min-height:48px;font-size:17px;font-weight:900;color:white;background:#0e806c;box-shadow:0 4px 0 #086453;cursor:pointer}
+#teacherStartNow:hover{background:#0b6f60}
+#teacherQuickActions .teacher-note{font-size:13px;line-height:1.65;color:#52717b;margin:10px 0 0}
+#teacherQuickNotice{font-size:13px;font-weight:850;line-height:1.5;color:#936b23;min-height:0;margin:7px 0 0}
+html:not(.teacher-mode) #edit,
+html:not(.teacher-mode) #teacher,
+html:not(.teacher-mode) #backTeacher,
+html:not(.teacher-mode) #resultTeacher,
+html:not(.teacher-mode) #resultsTeacher{display:none!important}
+@media(max-width:550px){#studentQuickNav{padding:7px 12px}#studentQuickNav a{padding:7px 10px}#teacherGear{padding:7px 11px;font-size:13px}#teacherStartNow{width:100%}}
+
 </style>
 </head>
 <body>
+<div id="studentQuickNav" role="navigation" aria-label="学习与教师快捷导航">
+<a href="https://limkimsze-maker.github.io/Classroom-Companion-Chinese-Edition/zhongwen-qimiaodao/" aria-label="返回中文奇妙岛">🏝️ 返回奇妙岛</a>
+<button type="button" id="teacherGear" title="教师设置：修改或添加练习题" aria-label="教师设置：修改或添加练习题" aria-pressed="false"><span class="gear-symbol" aria-hidden="true">⚙️</span><span>教师设置</span></button>
+</div><div id="studentLoading" role="status">✨ 正在准备第一道题…</div>
+
 <header><div><div class="brand">🧩 词语搭配</div><div class="subheading">中文互动练习 · 词语组合与配对</div></div><div class="chip">独立教学活动</div></header>
 <main>
 <nav class="steps" aria-label="活动步骤"><span id="step1" class="step current">1 · 教师设置</span><span id="step2" class="step">2 · 检查搭配</span><span id="step3" class="step">3 · 学生练习</span></nav>
@@ -611,6 +641,95 @@ $('importJson').onclick=()=>$('importFile').click();
 $('importFile').onchange=async e=>{await importJSON(e.target.files?.[0]);e.target.value=''};
 renderExamples();
 addEditor();
+
+/* Student-first launcher: preserves the original teaching engine and its JSON workflows. */
+(function(){
+ const isShown=id=>{const el=document.getElementById(id);return !!el&&!el.classList.contains('hidden')&&!el.hidden;};
+ const studentPage='play';
+ const storageKey='chinese-student-first-v1:ciyu-dapei';
+ const saveStatus=document.createElement('p');saveStatus.id='teacherQuickNotice';saveStatus.setAttribute('role','status');saveStatus.setAttribute('aria-live','polite');
+ const quick=document.createElement('div');quick.id='teacherQuickActions';
+ const startButton=document.createElement('button');startButton.type='button';startButton.id='teacherStartNow';
+ startButton.textContent='✅ 保存设置并开始练习';
+ const description=document.createElement('p');description.className='teacher-note';description.textContent='修改题目后点击上面的按钮。设置仅保留在这台设备的这个浏览器中；如需转移到别的设备，请使用下方的“导出 JSON”和“导入 JSON”。';
+ quick.append(startButton,description,saveStatus);
+ const setup=document.getElementById('setup');
+ const heading=setup.querySelector('h1,h2');
+ if(heading)heading.insertAdjacentElement('afterend',quick);else setup.prepend(quick);
+ const gear=document.getElementById('teacherGear');
+ const setMode=teacher=>{
+   document.documentElement.classList.toggle('teacher-mode',teacher);
+   gear.setAttribute('aria-pressed',String(teacher));
+   gear.title=teacher?'教师设置已打开：修改题目后点击保存并开始练习':'教师设置：修改或添加练习题';
+ };
+ const teacherMode=()=>{
+   showSection('setup');
+   setMode(true);
+ };
+ gear.addEventListener('click',teacherMode);
+ const currentData=()=>({app:'ChineseWordCollocation',version:1,title:$('activityTitle').value.trim()||'词语搭配',sets:sets.map(cloneSet)});
+ const saveLocally=()=>{
+   try{
+     const payload=JSON.stringify(currentData());
+     localStorage.setItem(storageKey,payload);
+     saveStatus.textContent='✓ 题目已保存在本浏览器。';
+     return true;
+   }catch(e){
+     saveStatus.textContent='⚠️ 无法保存在本浏览器（可能是储存空间不足）。请导出 JSON 备份。';
+     return false;
+   }
+ };
+ const studentMode=()=>setMode(false);
+ const startFromSettings=(persist)=>{
+   try{
+     prepare();
+     if(!isShown('preview')){setMode(true);return false}
+     start();
+     if(!isShown(studentPage)){setMode(true);return false}
+     if(persist)saveLocally();
+     studentMode();
+     return true;
+   }catch(e){
+     saveStatus.textContent='⚠️ 无法开始练习，请检查题目设置。';
+     teacherMode();return false;
+   }
+ };
+ startButton.addEventListener('click',()=>startFromSettings(true));
+ const nativeGenerate=document.getElementById('start');
+ if(nativeGenerate){
+   nativeGenerate.addEventListener('click',()=>{
+     if(isShown(studentPage)){saveLocally();studentMode();}
+   });
+ }
+ for(const id of ['edit','teacher','backTeacher','resultTeacher','resultsTeacher','back','backSetup']){
+   const el=document.getElementById(id);
+   if(el)el.addEventListener('click',()=>{
+     if(isShown('setup'))setMode(true);
+   });
+ }
+ const loadSaved=async()=>{
+   let raw=null;
+   try{raw=localStorage.getItem(storageKey)}catch(e){}
+   if(raw){
+     try{
+       const decoded=JSON.parse(raw);
+       if(decoded&&decoded.app==='ChineseWordCollocation'){
+         await importJSON(new Blob([raw],{type:'application/json'}));
+       }
+     }catch(e){}
+   }
+   if(!sets.length)loadAllExamples();
+ };
+ (async()=>{
+   try{
+     await loadSaved();
+     if(new URLSearchParams(location.search).get('teacher')==='1')teacherMode();
+     else if(!startFromSettings(false))teacherMode();
+   }catch(e){try{teacherMode()}catch(ignore){}}
+   finally{document.documentElement.classList.add('student-ready')}
+ })();
+})();
+ 
 </script>
 </body>
 </html>
