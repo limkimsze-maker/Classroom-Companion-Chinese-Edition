@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="zh-SG">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08796d">
+<title>语病诊所｜中文互动练习</title>
+<style>
+:root{--ink:#193948;--sub:#557482;--teal:#09796d;--mint:#e6f6f0;--bg:#f3f7f9;--line:#d6e5e8;--danger:#b54338;--gold:#f6bd53}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;color:var(--ink);background:var(--bg);font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",system-ui,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #eab34b;outline-offset:3px}
+.hidden,[hidden]{display:none!important}
+header{padding:19px clamp(16px,4vw,46px);background:linear-gradient(110deg,#153e4a,#0d796b);color:white;display:flex;align-items:center;justify-content:space-between;gap:16px}
+header .brand{font-weight:850;font-size:clamp(23px,3vw,32px)}
+header .sub{font-size:12px;color:#d2efe6;margin-top:3px}
+header .chip{font-size:12px;white-space:nowrap;border:1px solid #8abfae;border-radius:30px;padding:7px 11px}
+main{max-width:1120px;margin:23px auto;padding:0 16px 28px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:17px}
+.steps span{border-radius:28px;border:1px solid var(--line);padding:8px 12px;background:white;color:var(--sub);font-size:13px;font-weight:800}
+.steps span.active{border-color:#9dd2bf;background:var(--mint);color:#0b7566}
+.panel{border:1px solid var(--line);border-radius:20px;background:white;box-shadow:0 7px 26px #153f4a0d;padding:clamp(17px,3vw,30px);margin-bottom:18px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(26px,3vw,34px);margin-bottom:10px}
+h2{font-size:22px;margin-bottom:13px}
+h3{font-size:19px;margin-bottom:9px}
+.hint{font-size:14px;color:var(--sub);line-height:1.7}
+.small{font-size:13px}
+label{display:block;font-weight:800;margin-bottom:7px}
+input[type=text],textarea{width:100%;border:1.5px solid #bed0d7;border-radius:11px;padding:11px 13px;font-size:17px;color:var(--ink);background:white;min-width:0}
+textarea{resize:vertical;min-height:67px}
+.btn{border:0;border-radius:12px;background:var(--teal);color:white;font-weight:800;padding:11px 16px;min-height:44px}
+.btn.secondary{background:#e9f1f4;color:#305566}
+.btn.outline{background:white;color:var(--teal);border:1px solid #a1cdc1}
+.btn.danger{background:#fff0ed;color:#aa3f36}
+.btn:disabled{opacity:.48;cursor:default}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:18px}
+.examples{border:1px solid #bde1d5;background:#f1faf6;padding:16px 18px;border-radius:16px;margin:19px 0}
+.examples-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.examples-head strong{font-size:18px;color:#0c675a}
+.examples summary{font-weight:850;color:#146b5e;cursor:pointer;margin-top:8px;padding:7px 0}
+.example-list{display:grid;gap:9px;margin-top:8px}
+.example-entry{background:white;border:1px solid #d0e7dc;border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.example-content{flex:1 1 440px;min-width:0}
+.example-entry strong{display:block;font-size:16px;line-height:1.6}
+.example-entry .wrong{display:block;color:#ad4d3e;font-size:15px;line-height:1.7}
+.example-entry .fixed{display:block;color:#12816a;font-size:15px;line-height:1.7}
+.example-entry .btn{font-size:13px;min-height:39px;padding:8px 12px}
+.field{margin:17px 0}
+.editor{border:1px solid var(--line);border-radius:16px;padding:17px;margin:16px 0;background:#fcfefe}
+.editor-header{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.editor-number{color:var(--teal);font-size:14px;font-weight:900}
+.editor-header .btn{font-size:13px;padding:8px 12px;min-height:39px}
+.editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:14px}
+.editor-grid .wide{grid-column:1 / -1}
+.voice-line{display:flex;gap:7px;align-items:center}
+.voice-line input,.voice-line textarea{flex:1}
+.voice-line .mic{flex:0 0 auto;min-width:45px;padding:9px;min-height:42px;font-size:14px}
+.mic.listening{background:#bf3750}
+.voice-status{font-size:13px;color:var(--sub);line-height:1.6;margin:9px 0 0;min-height:19px}
+.note{padding:13px 15px;border-left:4px solid #65b69e;background:#f1f9f5;border-radius:0 11px 11px 0;color:#446b77;font-size:14px;line-height:1.75;margin:15px 0}
+.status{font-size:13px;color:#53717f;line-height:1.6;margin-top:12px}
+.status.bad{color:var(--danger)}
+.preview-card{border:1px solid var(--line);border-radius:17px;padding:17px;background:#fbfefe;margin:15px 0}
+.preview-card .number{color:var(--teal);font-weight:850;font-size:14px;margin:0 0 9px}
+.preview-card .wrong,.preview-card .fixed{font-size:clamp(20px,2.4vw,26px);line-height:1.85;font-weight:750;overflow-wrap:anywhere}
+.preview-card .wrong span{color:#aa4238;background:#ffeded;border-bottom:3px solid #e59286;border-radius:6px;padding:0 2px}
+.preview-card .fixed span{color:#086b58;background:#e2f5e9;border-bottom:3px solid #77c5aa;border-radius:6px;padding:0 2px}
+.preview-card .choice-note{font-size:13px;color:#577782;margin:12px 0 0;line-height:1.6}
+.preview-label{font-size:12px;text-transform:uppercase;color:#64808b;letter-spacing:.07em;font-weight:850;margin:12px 0 3px}
+.quiz-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.quiz-progress{font-weight:900;color:#0e786c}
+.quiz-score{color:var(--sub);font-size:14px}
+.stage-indicator{font-weight:850;color:#0c7167;margin:14px 0 9px;font-size:14px}
+.sentence-view{border:1px solid #d3e3e6;border-radius:16px;background:#f8fbfc;padding:18px;min-height:126px;line-height:2.12;font-size:clamp(25px,3.1vw,39px);overflow-wrap:anywhere;word-break:normal;margin:16px 0 20px}
+.word{border:1.5px solid transparent;border-radius:8px;padding:5px 2px;background:transparent;color:var(--ink);font:inherit;line-height:1.6;vertical-align:baseline;white-space:normal}
+.word:hover,.word:focus-visible{border-color:#9cc9bd;background:#ecf7f3}
+.word.active{border-color:#e2a23a;background:#fff1c8}
+.word.found{border-color:#18886f;background:#def4e8;color:#096b5c}
+.punctuation{white-space:pre-wrap}
+.repair-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 6px}
+.repair-choice{border:2px solid #b7d4d8;border-radius:13px;min-height:69px;background:white;color:#18566a;font-size:clamp(21px,2.5vw,28px);font-weight:850;padding:12px;overflow-wrap:anywhere}
+.repair-choice:hover,.repair-choice:focus-visible{background:#e5f6ed;border-color:#158976}
+.answer-box{display:grid;gap:9px;border:1px solid #aad4bf;border-radius:16px;padding:16px;background:#f4fbf6}
+.answer-box .label{font-size:14px;font-weight:800;color:#0f7667}
+.answer-box .complete{font-size:clamp(24px,3vw,33px);font-weight:750;line-height:1.8;overflow-wrap:anywhere}
+.feedback{font-size:17px;font-weight:850;line-height:1.65;min-height:31px;margin:14px 0 2px;color:#9a5427}
+.feedback.good{color:#0c8066}
+.feedback.bad{color:#b3463c}
+.results-big{text-align:center;color:#107c67;font-size:clamp(27px,4vw,40px);font-weight:850;margin:20px 0}
+.results-detail{font-size:20px;text-align:center;line-height:1.7;color:#436872}
+footer{text-align:center;padding:14px 15px 30px;font-size:12px;color:#667e89}
+@media(max-width:670px){header .chip{display:none}.editor-grid{grid-template-columns:1fr}.editor-grid .wide{grid-column:1}.panel{padding:17px}.examples{padding:13px}.repair-buttons{gap:8px}.repair-choice{min-height:58px}.sentence-view{padding:13px}.voice-line{gap:5px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">🏥 语病诊所</div><div class="sub">中文互动练习 · 找病句、改病句</div></div><div class="chip">独立中文活动</div></header>
+<main>
+<nav class="steps" aria-label="活动步骤"><span id="step1" class="active">1 · 教师设置</span><span id="step2">2 · 检查答案</span><span id="step3">3 · 学生练习</span></nav>
+<section id="setup" class="panel">
+ <h1>教师设置</h1>
+ <p class="hint">请输入<strong>一个有错误的句子</strong>、<strong>错误部分</strong>和<strong>正确改法</strong>。系统会让学生先找出错误，再从四个改法中选择正确答案。</p>
+ <div class="examples">
+  <div class="examples-head"><strong>📚 五个可直接使用的病句示例</strong><button id="loadAllExamples" class="btn outline" type="button">载入全部 5 句</button></div>
+  <p class="hint small" style="margin:10px 0">载入后仍停留在教师设置。答案和三个干扰选项已配置好，之后可以逐题修改。</p>
+  <details><summary>查看五个例句，并逐句添加</summary><div id="exampleList" class="example-list"></div></details>
+ </div>
+ <div class="field"><label for="activityTitle">活动名称（可选）</label><input type="text" id="activityTitle" maxlength="90" value="语病诊所" placeholder="例如：语病诊所 · 第三课"></div>
+ <div id="editors"></div>
+ <div class="actions"><button id="addQuestion" type="button" class="btn secondary">＋ 添加病句</button></div>
+ <div class="note"><strong>教师提示：</strong>每题只设置<strong>一个需修改的部分</strong>。例如病句「妈妈买了一本雨伞。」错误部分填「一本」，正确改法填「一把」，干扰词填「一张、一双、一条」。<br>
+ 系统只接受老师指定的答案。请确保每题没有其他同样正确的选项，避免多解；普通话语音识别后也要核对文字。</div>
+ <div class="actions">
+  <button id="prepare" type="button" class="btn">下一步：检查答案 →</button>
+  <button id="exportJson" type="button" class="btn outline">⬇ 导出 JSON</button>
+  <button id="importJson" type="button" class="btn outline">⬆ 导入 JSON</button>
+  <input id="jsonInput" type="file" accept=".json,application/json" hidden>
+ </div>
+ <p id="setupStatus" class="status" role="status" aria-live="polite">JSON 会保存病句、正确改法、干扰选项和活动名称。</p>
+</section>
+<section id="preview" class="panel hidden">
+ <h1>检查病句和标准答案</h1>
+ <p class="hint">请确认红色部分是唯一要修改的地方，绿色部分是老师指定的正确改法。学生将先找错，再选择改法。</p>
+ <div id="previewItems"></div>
+ <div class="actions">
+  <button id="generate" type="button" class="btn">生成学生练习 →</button>
+  <button id="backSetup" type="button" class="btn secondary">← 返回教师设置</button>
+  <button id="exportPreview" type="button" class="btn outline">⬇ 导出 JSON</button>
+ </div>
+</section>
+<section id="play" class="panel hidden">
+ <div class="quiz-top"><span class="quiz-progress" id="progress"></span><span class="quiz-score" id="score"></span></div>
+ <h2 id="quizTitle" style="margin:16px 0 8px"></h2>
+ <p id="stageInstruction" class="stage-indicator">第 1 步：找出错误部分</p>
+ <p id="helpText" class="hint">点击句子中需要修改的词语或短语。</p>
+ <div id="sentenceView" class="sentence-view" aria-live="polite"></div>
+ <div id="repairArea" hidden>
+   <h3>第 2 步：选择正确改法</h3>
+   <p class="hint">选择一个最合适的词语或短语替换错误部分。</p>
+   <div id="repairChoices" class="repair-buttons"></div>
+ </div>
+ <div id="successArea" class="answer-box" hidden><span class="label">✓ 修改后的完整句子</span><div id="fixedSentence" class="complete"></div></div>
+ <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+ <div class="actions">
+  <button id="retry" type="button" class="btn secondary">重新找错</button>
+  <button id="read" type="button" class="btn outline" hidden>🔊 朗读正确句子</button>
+  <button id="next" type="button" class="btn" hidden>下一题 →</button>
+  <button id="teacher" type="button" class="btn secondary">教师设置</button>
+ </div>
+</section>
+<section id="results" class="panel hidden">
+ <div class="results-big">🎉 成功治好所有病句！</div>
+ <p id="resultDetail" class="results-detail"></p>
+ <div class="actions" style="justify-content:center"><button id="again" type="button" class="btn">再练一次</button><button id="resultTeacher" type="button" class="btn secondary">返回教师设置</button></div>
+</section>
+</main>
+<footer>语病诊所 · 中文互动练习 · Created by Lim Kim Sze · 资料只在浏览器内处理；语音识别可能需要联网</footer>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const SpeechRecognitionClass=window.SpeechRecognition||window.webkitSpeechRecognition;
+const EXAMPLES=[
+ {type:'错别字',wrong:'老师提醒我们认真做笔己。',fault:'笔己',fix:'笔记',options:['笔迹','笔画','笔试']},
+ {type:'量词不当',wrong:'妈妈买了一本雨伞。',fault:'一本',fix:'一把',options:['一张','一双','一条']},
+ {type:'语序不当',wrong:'小红在公园里玩耍快乐地。',fault:'玩耍快乐地',fix:'快乐地玩耍',options:['快乐地睡觉','跑步快乐地','快乐地看书']},
+ {type:'关联词不当',wrong:'虽然天气很冷，所以我们仍然坚持晨跑。',fault:'所以',fix:'但是',options:['因为','因此','于是']},
+ {type:'用词不当',wrong:'小明把脏手洗得非常整齐。',fault:'整齐',fix:'干净',options:['美丽','热闹','响亮']}
+];
+let questions=[],activeMic=null,questionIndex=0,stage='find',tries=0,firstTryScore=0,finished=0,repairOptions=[],chosenFault=false;
+function trim(s){return String(s||'').trim()}
+function cloneQuestion(q){return {type:q.type,wrong:q.wrong,fault:q.fault,fix:q.fix,options:[...q.options]}}
+function createCorrect(q){
+ const i=q.wrong.indexOf(q.fault);
+ return q.wrong.slice(0,i)+q.fix+q.wrong.slice(i+q.fault.length);
+}
+function occurrenceCount(text,needle){
+ if(!needle)return 0;
+ let count=0,pos=0;
+ while((pos=text.indexOf(needle,pos))!==-1){count++;pos+=needle.length}
+ return count;
+}
+function validateQuestion(q,i){
+ const where='第 '+(i+1)+' 句';
+ if(!q||typeof q.type!=='string'||typeof q.wrong!=='string'||typeof q.fault!=='string'||typeof q.fix!=='string'||!Array.isArray(q.options))return where+'格式不正确。';
+ if(q.type.length>40||q.wrong.length>500||q.fault.length>80||q.fix.length>80)return where+'内容太长。';
+ if(!trim(q.wrong)||!trim(q.fault)||!trim(q.fix))return where+'的句子、错误部分或正确改法为空。';
+ if(q.fault===q.fix)return where+'的错误部分和正确改法不能相同。';
+ if(occurrenceCount(q.wrong,q.fault)!==1)return where+'的错误部分必须在病句中恰好出现一次。';
+ if(q.options.length!==3||q.options.some(x=>typeof x!=='string'||!trim(x)||x.length>80))return where+'必须有三个非空干扰选项。';
+ const all=[q.fix,...q.options].map(trim);
+ if(new Set(all).size!==4)return where+'的正确改法和干扰词不能重复。';
+ return '';
+}
+function showSection(id){
+ for(const page of ['setup','preview','play','results'])$(page).classList.toggle('hidden',page!==id);
+ const active=id==='setup'?1:id==='preview'?2:3;
+ for(let i=1;i<=3;i++)$('step'+i).classList.toggle('active',i===active);
+ if(window.speechSynthesis)window.speechSynthesis.cancel();
+ try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}
+}
+function status(msg,error=false){$('setupStatus').textContent=msg;$('setupStatus').classList.toggle('bad',!!error)}
+function setFeedback(msg='',kind=''){
+ $('feedback').textContent=msg;$('feedback').className='feedback'+(kind?' '+kind:'');
+}
+function stopMic(abort=false){
+ if(!activeMic)return;
+ try{abort?activeMic.rec.abort():activeMic.rec.stop()}catch(e){}
+}
+function clearMic(){
+ if(!activeMic)return;
+ const prev=activeMic;activeMic=null;
+ prev.button.classList.remove('listening');
+ prev.button.textContent='🎤';
+ prev.button.setAttribute('aria-pressed','false');
+}
+function cleanSpeech(s,mode){
+ let word=String(s||'').trim();
+ if(mode!=='sentence')word=word.replace(/^[，,。！？!?；;：:"“”'\s]+|[，,。！？!?；;：:"“”'\s]+$/gu,'').trim();
+ return word;
+}
+function voiceInput(row,field,button,mode){
+ const message=row.querySelector('.voice-status');
+ if(activeMic){
+  if(activeMic.button===button){message.textContent='正在停止录音…';stopMic();return}
+  stopMic(true);clearMic();
+ }
+ if(!SpeechRecognitionClass){message.textContent='此浏览器不支持语音输入，请试用 Chrome / Edge 或直接键入。';return}
+ let rec;
+ try{rec=new SpeechRecognitionClass();rec.lang='zh-CN';rec.continuous=false;rec.interimResults=true;rec.maxAlternatives=1}
+ catch(e){message.textContent='无法启动语音识别，请直接键入。';return}
+ const previous=field.value;let final='',hasError=false;
+ rec.onstart=()=>{if(activeMic?.rec===rec)message.textContent='🔴 正在聆听，请说普通话。'};
+ rec.onresult=e=>{
+  if(activeMic?.rec!==rec||!row.isConnected)return;
+  const finals=[],interims=[];
+  for(let i=0;i<e.results.length;i++){
+   const t=e.results[i][0]?.transcript||'';
+   (e.results[i].isFinal?finals:interims).push(t);
+  }
+  final=cleanSpeech(finals.join(''),mode);
+  message.textContent=interims.length?'正在识别：'+interims.join(''):'已识别：'+(final||'…');
+ };
+ rec.onerror=e=>{
+  if(activeMic?.rec!==rec)return;hasError=true;
+  const errors={'not-allowed':'麦克风权限未获允许。','network':'语音识别服务暂时无法连接。','audio-capture':'没有检测到麦克风。','no-speech':'没有检测到语音，请再试一次。'};
+  message.textContent=errors[e.error]||'语音识别失败，请重试。';
+ };
+ rec.onend=()=>{
+  if(activeMic?.rec!==rec)return;
+  clearMic();if(hasError)return;
+  if(!final){message.textContent='没有识别到文字，请重试。';return}
+  const separator=mode==='options'&&trim(previous)&&!/[、，,；;\s]$/u.test(previous)?'、':'';
+  field.value=previous+separator+final;
+  message.textContent='已输入：'+final+'。请核对文字并修改。';
+ };
+ activeMic={rec,button};
+ button.classList.add('listening');button.textContent='■ 停止';button.setAttribute('aria-pressed','true');
+ message.textContent='正在申请麦克风权限…';
+ try{rec.start()}catch(e){clearMic();message.textContent='无法启动麦克风，请检查权限。'}
+}
+function createField(row,id,labelText,initial,placeholder,mode='word',multiline=false){
+ const group=document.createElement('div');group.className='editor-field'+(multiline?' wide':'');
+ const label=document.createElement('label');label.textContent=labelText;
+ const line=document.createElement('div');line.className='voice-line';
+ const input=document.createElement(multiline?'textarea':'input');
+ if(!multiline)input.type='text';
+ input.id=id;input.className='entry-'+(mode==='sentence'?'wrong':mode==='fault'?'fault':mode==='fix'?'fix':mode==='options'?'options':'type');
+ input.value=initial||'';input.placeholder=placeholder;input.maxLength=mode==='sentence'?500:mode==='options'?300:mode==='type'?40:80;
+ label.htmlFor=input.id;
+ line.append(input);
+ if(mode!=='type'){
+  const mic=document.createElement('button');mic.type='button';mic.className='btn secondary mic';mic.textContent='🎤';
+  mic.setAttribute('aria-label','语音输入：'+labelText);mic.setAttribute('aria-pressed','false');
+  mic.onclick=()=>voiceInput(row,input,mic,mode);
+  line.append(mic);
+ }
+ group.append(label,line);
+ return group;
+}
+function addEditor(q={type:'',wrong:'',fault:'',fix:'',options:[]}){
+ const row=document.createElement('div');row.className='editor',root=$('editors');
+ const header=document.createElement('div');header.className='editor-header';
+ const order=document.createElement('span');order.className='editor-number';order.textContent='第 '+(root.children.length+1)+' 句';
+ const remove=document.createElement('button');remove.type='button';remove.className='btn danger';remove.textContent='删除这句';
+ remove.onclick=()=>{
+  if(activeMic&&row.contains?.(activeMic.button)){stopMic(true);clearMic()}
+  if(root.children.length===1){
+   for(const input of row.querySelectorAll('input,textarea'))input.value='';
+  }else{row.remove();renumber()}
+ };
+ header.append(order,remove);
+ const fields=document.createElement('div');fields.className='editor-grid';
+ const code=Math.random().toString(36).slice(2,9);
+ fields.append(
+  createField(row,'type-'+code,'语病类型（可选）',q.type,'例如：错别字','type'),
+  createField(row,'wrong-'+code,'有错误的完整句子',q.wrong,'例如：妈妈买了一本雨伞。','sentence',true),
+  createField(row,'fault-'+code,'错误部分（只出现一次）',q.fault,'例如：一本','fault'),
+  createField(row,'fix-'+code,'正确改法',q.fix,'例如：一把','fix'),
+  createField(row,'options-'+code,'三个干扰选项（用“、”隔开）',(q.options||[]).join('、'),'例如：一张、一双、一条','options')
+ );
+ const m=document.createElement('p');m.className='voice-status';m.setAttribute('role','status');m.setAttribute('aria-live','polite');
+ row.append(header,fields,m);root.append(row);
+ renumber();
+ if(!q.wrong)row.querySelector('.entry-wrong').focus();
+ return row;
+}
+function renumber(){[...$('editors').children].forEach((row,i)=>row.querySelector('.editor-number').textContent='第 '+(i+1)+' 句')}
+function rowData(row){
+ const get=kind=>row.querySelector('.entry-'+kind).value.trim();
+ const options=get('options').split(/[、，,；;\n]+/u).map(trim).filter(Boolean);
+ return {type:get('type'),wrong:get('wrong'),fault:get('fault'),fix:get('fix'),options};
+}
+function readRows(){
+ return [...$('editors').children].map(rowData)
+  .filter(q=>q.wrong||q.fault||q.fix||q.type||q.options.length);
+}
+function syncQuestions(){
+ if(activeMic){status('请先停止语音输入，再继续。',true);return false}
+ const list=readRows();
+ if(!list.length){status('请先输入至少一句病句，或载入示例。',true);return false}
+ if(list.length>60){status('最多支持 60 句。',true);return false}
+ for(let i=0;i<list.length;i++){
+  const problem=validateQuestion(list[i],i);
+  if(problem){status(problem,true);return false}
+ }
+ questions=list.map(cloneQuestion);
+ status('已准备 '+questions.length+' 句，请检查标准答案。');
+ return true;
+}
+function loadAllExamples(){
+ if(readRows().length&&!window.confirm('载入五个示例会替换当前编辑的句子。确定继续吗？'))return;
+ if(activeMic){stopMic(true);clearMic()}
+ questions=EXAMPLES.map(cloneQuestion);
+ $('editors').replaceChildren();EXAMPLES.forEach(addEditor);
+ $('activityTitle').value='语病诊所';
+ status('✓ 已载入五个示例。仍在教师设置，可以先修改，再点击“下一步：检查答案”。');
+ showSection('setup');
+}
+function loadExample(i){
+ const sample=EXAMPLES[i];if(!sample)return;
+ if(readRows().some(q=>q.wrong===sample.wrong)){status('这句示例已经添加，可以直接修改。');return}
+ if(activeMic){stopMic(true);clearMic()}
+ const empty=[...$('editors').children].find(row=>!rowData(row).wrong&&!rowData(row).fault&&!rowData(row).fix&&!rowData(row).type&&!rowData(row).options.length);
+ if(empty){
+  empty.querySelector('.entry-type').value=sample.type;
+  empty.querySelector('.entry-wrong').value=sample.wrong;
+  empty.querySelector('.entry-fault').value=sample.fault;
+  empty.querySelector('.entry-fix').value=sample.fix;
+  empty.querySelector('.entry-options').value=sample.options.join('、');
+ }else addEditor(sample);
+ status('✓ 已添加第 '+(i+1)+' 句，仍在教师设置。');
+ showSection('setup');
+}
+function renderExamples(){
+ const root=$('exampleList');root.replaceChildren();
+ EXAMPLES.forEach((q,i)=>{
+  const card=document.createElement('div');card.className='example-entry';
+  const detail=document.createElement('div');detail.className='example-content';
+  const title=document.createElement('strong');title.textContent=(i+1)+'. '+q.type;
+  const bad=document.createElement('span');bad.className='wrong';bad.textContent='病句：'+q.wrong;
+  const good=document.createElement('span');good.className='fixed';good.textContent='改正：'+createCorrect(q);
+  const button=document.createElement('button');button.type='button';button.className='btn secondary';button.textContent='＋ 使用此句';
+  button.setAttribute('aria-label','使用第 '+(i+1)+' 个病句');button.onclick=()=>loadExample(i);
+  detail.append(title,bad,good);card.append(detail,button);root.append(card);
+ });
+}
+function markedText(container,q,corrected){
+ const prefix=q.wrong.slice(0,q.wrong.indexOf(q.fault)),suffix=q.wrong.slice(q.wrong.indexOf(q.fault)+q.fault.length);
+ container.append(document.createTextNode(prefix));
+ const mark=document.createElement('span');mark.textContent=corrected?q.fix:q.fault;
+ container.append(mark,document.createTextNode(suffix));
+}
+function renderPreview(){
+ const root=$('previewItems');root.replaceChildren();
+ questions.forEach((q,i)=>{
+  const card=document.createElement('div');card.className='preview-card';
+  const number=document.createElement('div');number.className='number';number.textContent='第 '+(i+1)+' 句 · '+(q.type||'病句修改');
+  const wrongTitle=document.createElement('div');wrongTitle.className='preview-label';wrongTitle.textContent='错误句子';
+  const wrong=document.createElement('div');wrong.className='wrong';markedText(wrong,q,false);
+  const fixedTitle=document.createElement('div');fixedTitle.className='preview-label';fixedTitle.textContent='正确句子';
+  const fixed=document.createElement('div');fixed.className='fixed';markedText(fixed,q,true);
+  const choice=document.createElement('p');choice.className='choice-note';
+  choice.textContent='正确选项：'+q.fix+'　｜　干扰选项：'+q.options.join(' · ');
+  card.append(number,wrongTitle,wrong,fixedTitle,fixed,choice);root.append(card);
+ });
+}
+function prepare(){if(!syncQuestions())return;renderPreview();showSection('preview')}
+function shuffle(items){
+ const copy=[...items];
+ for(let attempt=0;attempt<20;attempt++){
+  for(let i=copy.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}
+  if(copy.some((v,i)=>v.id!==items[i].id))return copy;
+ }
+ if(copy.length>1)[copy[0],copy[1]]=[copy[1],copy[0]];
+ return copy;
+}
+function errorPieces(q){
+ const where=q.wrong.indexOf(q.fault);
+ const prefix=q.wrong.slice(0,where),suffix=q.wrong.slice(where+q.fault.length);
+ const segment=str=>{
+  if(!str)return [];
+  try{
+   return [...new Intl.Segmenter('zh-SG',{granularity:'word'}).segment(str)].map(x=>x.segment).filter(x=>x);
+  }catch(e){return Array.from(str)}
+ };
+ // The precise teacher-selected wrong phrase is always a selectable unit.
+ // Segmentation happens only outside that phrase, avoiding dictionary variation.
+ return [...segment(prefix).map(text=>({text,error:false})),{text:q.fault,error:true},
+  ...segment(suffix).map(text=>({text,error:false}))];
+}
+function loadQuestion(){
+ const q=questions[questionIndex];
+ stage='find';tries=0;chosenFault=false;repairOptions=shuffle([{id:'correct',text:q.fix},...q.options.map((x,i)=>({id:'wrong-'+i,text:x}))]);
+ setFeedback('','');drawQuestion();
+}
+function incorrect(msg){tries++;setFeedback(msg,'bad')}
+function selectPiece(isError){
+ if(stage!=='find')return;
+ if(!isError){incorrect('这部分不是需要修改的语病，请再仔细找一找。');return}
+ chosenFault=true;stage='repair';setFeedback('✓ 找到错误部分！请选出正确的改法。','good');drawQuestion();
+}
+function chooseRepair(id){
+ if(stage!=='repair')return;
+ if(id!=='correct'){incorrect('这个改法不合适，请想一想哪一个才是正确的。');return}
+ stage='solved';finished++;
+ if(tries===0)firstTryScore++;
+ setFeedback('✓ 诊断正确，修改成功！','good');drawQuestion();
+}
+function drawQuestion(){
+ const q=questions[questionIndex],view=$('sentenceView');
+ $('progress').textContent='第 '+(questionIndex+1)+' / '+questions.length+' 题';
+ $('score').textContent='首次答对 '+firstTryScore+' 题';
+ $('quizTitle').textContent=(q.type||'病句修改')+' · '+($('activityTitle').value.trim()||'语病诊所');
+ $('stageInstruction').textContent=stage==='find'?'第 1 步：找出错误部分':stage==='repair'?'第 2 步：选择正确改法':'诊断完成';
+ $('helpText').textContent=stage==='find'?'点击句子中需要修改的词语或短语。':stage==='repair'?'已经找到错误部分，请选择正确的替换词语。':'完整的正确句子如下。';
+ view.replaceChildren();
+ if(stage==='solved'){
+  const done=document.createElement('span');done.textContent=createCorrect(q);view.append(done);
+ }else{
+  errorPieces(q).forEach(piece=>{
+   if(!piece.text.trim()||/^[，。、；：？！“”‘’（）《》\s]+$/u.test(piece.text)){
+    const span=document.createElement('span');span.className='punctuation';span.textContent=piece.text;view.append(span);return;
+   }
+   const btn=document.createElement('button');btn.type='button';
+   btn.className='word'+(piece.error&&stage==='repair'?' found':'');
+   btn.textContent=piece.text;
+   btn.setAttribute('aria-label','选择词语 '+piece.text);
+   btn.disabled=stage==='repair';btn.onclick=()=>selectPiece(piece.error);
+   view.append(btn);
+  });
+ }
+ const repair=$('repairChoices');repair.replaceChildren();
+ if(stage==='repair')repairOptions.forEach(option=>{
+  const btn=document.createElement('button');btn.type='button';btn.className='repair-choice';btn.textContent=option.text;
+  btn.setAttribute('aria-label','改成 '+option.text);btn.onclick=()=>chooseRepair(option.id);repair.append(btn);
+ });
+ $('repairArea').hidden=stage!=='repair';
+ $('successArea').hidden=stage!=='solved';
+ $('fixedSentence').textContent=stage==='solved'?createCorrect(q):'';
+ $('retry').hidden=stage==='solved';$('read').hidden=stage!=='solved';$('next').hidden=stage!=='solved';
+ $('next').textContent=questionIndex===questions.length-1?'查看成绩 →':'下一题 →';
+}
+function start(){
+ if(!questions.length)return;
+ questionIndex=0;finished=0;firstTryScore=0;loadQuestion();showSection('play');
+}
+function restartQuestion(){if(stage==='solved')return;loadQuestion()}
+function next(){
+ if(stage!=='solved')return;
+ if(questionIndex<questions.length-1){questionIndex++;loadQuestion();return}
+ $('resultDetail').textContent='已成功修改 '+finished+' / '+questions.length+' 句。首次答对 '+firstTryScore+' / '+questions.length+' 题。';
+ showSection('results');
+}
+function speak(){
+ if(stage!=='solved'||!('speechSynthesis'in window))return;
+ speechSynthesis.cancel();
+ const utter=new SpeechSynthesisUtterance(createCorrect(questions[questionIndex]));
+ utter.lang='zh-CN';utter.rate=.86;
+ const voices=speechSynthesis.getVoices();
+ utter.voice=voices.find(v=>/^zh-(CN|SG)/i.test(v.lang)&&/Google|Xiaoxiao|female/i.test(v.name))||voices.find(v=>/^zh/i.test(v.lang))||null;
+ speechSynthesis.speak(utter);
+}
+function exportJSON(){
+ if(!syncQuestions())return;
+ const data={app:'ChineseSentenceClinic',version:1,title:$('activityTitle').value.trim()||'语病诊所',questions:questions.map(cloneQuestion)};
+ const file=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+ const url=URL.createObjectURL(file),link=document.createElement('a');
+ link.href=url;link.download='语病诊所-练习.json';document.body.appendChild(link);link.click();link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+ status('✓ 已导出 '+questions.length+' 句，包括标准答案及干扰词。');
+}
+async function importJSON(file){
+ if(!file)return;
+ if(file.size>2*1024*1024){status('JSON 文件不能超过 2 MB。',true);return}
+ try{
+  const obj=JSON.parse(await file.text());
+  if(!obj||obj.app!=='ChineseSentenceClinic'||obj.version!==1||!Array.isArray(obj.questions)||
+    obj.questions.length<1||obj.questions.length>60)throw Error('不是有效的语病诊所 JSON 文件。');
+  const loaded=obj.questions.map((q,i)=>{
+   const reason=validateQuestion(q,i);
+   if(reason)throw Error(reason);
+   return cloneQuestion({type:trim(q.type),wrong:trim(q.wrong),fault:trim(q.fault),fix:trim(q.fix),options:q.options.map(trim)});
+  });
+  if(activeMic){stopMic(true);clearMic()}
+  questions=loaded;
+  $('editors').replaceChildren();loaded.forEach(addEditor);
+  $('activityTitle').value=typeof obj.title==='string'?obj.title.slice(0,90):'语病诊所';
+  showSection('setup');status('✓ 已导入 '+questions.length+' 句，答案和干扰词都已保留。');
+ }catch(e){status('导入失败：'+(e.message||'格式错误'),true)}
+}
+$('loadAllExamples').onclick=loadAllExamples;
+$('addQuestion').onclick=()=>addEditor();
+$('prepare').onclick=prepare;
+$('backSetup').onclick=()=>showSection('setup');
+$('generate').onclick=start;
+$('retry').onclick=restartQuestion;
+$('next').onclick=next;
+$('read').onclick=speak;
+$('teacher').onclick=()=>showSection('setup');
+$('again').onclick=()=>{questionIndex=0;finished=0;firstTryScore=0;loadQuestion();showSection('play')};
+$('resultTeacher').onclick=()=>showSection('setup');
+$('exportJson').onclick=exportJSON;
+$('exportPreview').onclick=exportJSON;
+$('importJson').onclick=()=>$('jsonInput').click();
+$('jsonInput').onchange=async e=>{await importJSON(e.target.files?.[0]);e.target.value=''};
+renderExamples();
+addEditor();
+</script>
+</body>
+</html>
